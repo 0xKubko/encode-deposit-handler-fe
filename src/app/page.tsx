@@ -1,6 +1,5 @@
 'use client';
 
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi'
 import { readContract } from '@wagmi/core'
 import { abi as bootcampFactoryAbi } from '../abi/BootcampFactory.json'
@@ -45,7 +44,6 @@ export default function Home() {
 
   return (
     <>
-      <ConnectButton />
       {account.address && <p>{account.address}</p>}
       {isAdmin && <p>Admin</p>}
       {isManager && <p>Manager</p>}
