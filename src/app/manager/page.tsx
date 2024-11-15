@@ -4,11 +4,11 @@ import { useAccount } from "wagmi";
 import { addManager } from "../functions/BootcampFactory/addManager";
 import { useState } from "react";
 import { checkAddress } from "../utils/checkAddress";
-import { Modal } from "../components/Modal";
 import { blockExplorer } from "../const";
 import { addressIsManager } from "../functions/BootcampFactory/hasRole";
+import { Modal } from "../components/Modal";
 
-export default function Admin() {
+export default function Manager() {
     const account = useAccount();
     const [managerAddress, setManagerAddress] = useState<string>('0x');
     const [error, setError] = useState<string | null>(null);

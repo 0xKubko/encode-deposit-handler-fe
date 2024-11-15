@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./styles/globals.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { Providers } from "./providers";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { AccountLayout } from "./components/AccountLayout";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,9 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <ConnectButton />
-          {children}
-          </Providers>
+          <AccountLayout>
+            {children}
+          </AccountLayout>
+        </Providers>
       </body>
     </html>
   );
