@@ -10,13 +10,12 @@ import { createBootcamp } from "../functions/BootcampFactory/createBootcamp";
 interface Args {
     depositAmount: bigint;
     depositToken: `0x${string}`;
-    bootcampDuration: bigint;
     bootcampStartTime: bigint;
 }
 
 export default function CreateBootcamp() {
     const account = useAccount();
-    const [args, setArgs] = useState<Args>({depositAmount: 0n, depositToken: '0x', bootcampDuration: 0n, bootcampStartTime: 0n});
+    const [args, setArgs] = useState<Args>({depositAmount: BigInt(250), depositToken: '0x', bootcampStartTime: BigInt(0)});
     const [error, setError] = useState<string | null>(null);
     const [visible, setVisible] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -45,7 +44,7 @@ export default function CreateBootcamp() {
             setIsLoading(true);
             console.log(args);
             
-            createBootcamp(args.depositAmount, args.depositToken, args.bootcampDuration, args.bootcampStartTime).then(
+            createBootcamp(args.depositAmount, args.depositToken, args.bootcampStartTime).then(
                 result => {
                     if (result.ok) {                        
                         setTx(result.value);
@@ -64,6 +63,8 @@ export default function CreateBootcamp() {
             <button className="btn" onClick={() => setVisible(true)}>Create a bootcamp</button>
             <Modal visible={visible}>
                 <h3 className="font-bold text-lg">Create a bootcamp</h3>
+                <div>
+                <h4 className="text-sm">Deposit Amount</h4>
                 <input
                     name="depositAmount"
                     type="number"
@@ -72,6 +73,9 @@ export default function CreateBootcamp() {
                     value={args.depositAmount.toString()}
                     onChange={handleInputChange}
                 />
+                </div>
+                <div>
+                <h4 className="text-sm">Deposit Token Address</h4>
                 <input
                     type="text"
                     name="depositToken"
@@ -80,14 +84,9 @@ export default function CreateBootcamp() {
                     value={args.depositToken}
                     onChange={handleInputChange}
                 />
-                <input
-                    name="bootcampDuration"
-                    type="number"
-                    placeholder="Bootcamp Duration"
-                    className="input input-primary"
-                    value={args.bootcampDuration.toString()}
-                    onChange={handleInputChange}
-                />
+                </div>
+                <div>
+                <h4 className="text-sm">Bootcamp Start Time</h4>
                 <input
                     name="bootcampStartTime"
                     type="number"
@@ -96,6 +95,7 @@ export default function CreateBootcamp() {
                     value={args.bootcampStartTime.toString()}
                     onChange={handleInputChange}
                 />
+                </div>
                 {error && <p className="text-red-500">{error}</p>}
                 {isLoading && tx ===null && <span className="loading loading-dots loading-lg"></span>}
                 {tx !== null && <a href={`${blockExplorer}/tx/${tx}`}>See on the explorer!</a>}

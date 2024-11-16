@@ -5,9 +5,9 @@ import { contractFactoryAddress} from '@/app/const'
 import { Result } from '@/app/types';
 
 
-export async function createBootcamp(depositAmount: bigint, depositToken: `0x${string}`, bootcampDuration: bigint , bootcampStartTime: bigint ): Promise<Result<`0x${string}`>> {
+export async function createBootcamp(depositAmount: bigint, depositToken: `0x${string}`, bootcampStartTime: bigint ): Promise<Result<`0x${string}`>> {
     try {
-        console.log(depositAmount, depositToken, bootcampDuration, bootcampStartTime);
+        console.log(depositAmount, depositToken, bootcampStartTime);
         
         const result : `0x${string}` = await writeContract(config, {
             abi: bootcampFactoryAbi,
@@ -16,7 +16,6 @@ export async function createBootcamp(depositAmount: bigint, depositToken: `0x${s
             args: [
                 depositAmount,
                 depositToken,
-                bootcampDuration,
                 bootcampStartTime
             ],
           })
