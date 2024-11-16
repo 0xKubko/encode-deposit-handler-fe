@@ -11,7 +11,7 @@ export function useIsAdmin(){
             if (result.ok) {
                 return result.value;
             }
-            return result;
+            return false;
         }),
         enabled: !!account.address, // Ensure the query only runs when account.address is available
     });
