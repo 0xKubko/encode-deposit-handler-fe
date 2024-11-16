@@ -4,8 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 
 export function useIsManager(){
     const account = useAccount();
-    console.log(account.address);
-    
     const { data: isManager, refetch: refetchManager } = useQuery({
         queryKey: ['isManager', account.address],
         queryFn: () => addressIsManager(account.address || '0x').then((result) => {

@@ -33,7 +33,6 @@ export async function fetchBootcamps(): Promise<Result<Bootcamp[]>> {
         }        
         return { ok: true, value: bootcamps };
     } catch (error) {
-        console.error(error);
         return { ok: false, error: error as Error };
     }
 }

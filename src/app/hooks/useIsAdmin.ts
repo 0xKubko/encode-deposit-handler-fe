@@ -12,7 +12,8 @@ export function useIsAdmin(){
                 return result.value;
             }
             return result;
-        })
+        }),
+        enabled: !!account.address, // Ensure the query only runs when account.address is available
     });
 
     return { isAdmin, refetchAdmin };
