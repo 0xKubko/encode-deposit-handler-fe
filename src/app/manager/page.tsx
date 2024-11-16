@@ -2,13 +2,14 @@
 
 import { useAccount } from "wagmi";
 import CreateBootcamp from "./createBootcamp";
-import { useIsAdmin, useIsManager } from "../store/selectors";
 import Link from "next/link";
+import { useIsAdmin } from "../hooks/useIsAdmin";
+import { useIsManager } from "../hooks/useIsManager";
 
 export default function Manager() {
     const account = useAccount();
-    const isManager = useIsManager();
-    const isAdmin = useIsAdmin();
+    const {isManager} = useIsManager();
+    const {isAdmin} = useIsAdmin();
 
     if (!isManager && !isAdmin) {
         return (

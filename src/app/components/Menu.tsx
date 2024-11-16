@@ -1,12 +1,13 @@
 'use client';
 
-import { useIsAdmin, useIsManager } from "@/app/store/selectors";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
+import { useIsManager } from '../hooks/useIsManager';
+import { useIsAdmin } from '../hooks/useIsAdmin';
 
 export function Menu() {
-    const isAdmin = useIsAdmin();
-    const isManager = useIsManager();
+    const {isAdmin} = useIsAdmin();
+    const {isManager} = useIsManager();
     const currentPath = usePathname();
     return (
         <div className="p-6">

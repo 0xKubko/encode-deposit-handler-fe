@@ -42,7 +42,6 @@ export default function CreateBootcamp() {
         }
         if (account.address) {
             setIsLoading(true);
-            console.log(args);
             
             createBootcamp(args.depositAmount, args.depositToken, args.bootcampStartTime).then(
                 result => {

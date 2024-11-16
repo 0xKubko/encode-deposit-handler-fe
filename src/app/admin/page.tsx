@@ -4,11 +4,11 @@ import { useAccount } from "wagmi";
 import AddManager from "./AddManager";
 import RemoveManager from "./RemoveManager";
 import AddAdmin from "./AddAdmin";
-import { useIsAdmin } from "../store/selectors";
+import { useIsAdmin } from "../hooks/useIsAdmin";
 
 export default function Admin() {
     const account = useAccount();
-    const isAdmin = useIsAdmin();
+    const {isAdmin} = useIsAdmin();
 
     if (!isAdmin) {
         return (

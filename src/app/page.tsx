@@ -4,12 +4,13 @@ import { useAccount } from 'wagmi'
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
 import { LandingUser } from './components/LandingUser';
-import { useIsAdmin, useIsManager } from './store/selectors';
+import { useIsAdmin } from './hooks/useIsAdmin';
+import { useIsManager } from './hooks/useIsManager';
 
 export default function Home() {
   const account = useAccount();
-  const isAdmin = useIsAdmin();
-  const isManager = useIsManager();
+  const {isAdmin} = useIsAdmin();
+  const {isManager} = useIsManager();
   const router = useRouter(); // It may be better to not use rooting to keep the authentications simple
 
   if (account.isConnected || isAdmin || isManager) {

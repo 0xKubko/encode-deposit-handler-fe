@@ -26,7 +26,6 @@ export async function addressIsManager(address: `0x${string}`): Promise<Result<b
       abi: bootcampFactoryAbi, address: contractFactoryAddress as `0x${string}`,
       functionName: 'hasRole', args: [managerCode, address]
     }) as boolean;
-    console.log("addressIsManager:",result);
     
     return {ok: true, value: result}
 
