@@ -19,7 +19,7 @@ export function Menu() {
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
-                            style={{ color: currentPath === '/' ? 'gray' : 'white' }}>
+                            style={{ color: currentPath === '/' ? 'white' : 'gray' }}>
                             <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -44,7 +44,7 @@ export function Menu() {
                                 <g id="layer1" transform="translate(0 -289.063)">
                                     <path
                                         id="path852"
-                                        fill={currentPath === '/admin' ? 'gray' : 'white' }
+                                        fill={currentPath === '/admin' ? 'white' : 'gray' }
                                         fillOpacity="1"
                                         stroke="none"
                                         strokeDasharray="none"
@@ -67,7 +67,7 @@ export function Menu() {
                             xmlSpace="preserve"
                             id="Capa_1"
                             className="h-5 w-5"
-                            fill={currentPath === '/manager' ? 'gray' : 'white' }
+                            fill={currentPath === '/manager' ? 'white' : 'gray' }
                             version="1.1"
                             viewBox="0 0 218.582 218.582"
                         >
