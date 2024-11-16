@@ -16,12 +16,12 @@ export default function Manager() {
                 <h1 className="text-4xl font-bold">You are not a manager</h1>
             </div>
         )
-        
+
     } if (!isManager && isAdmin) {
         return (
             <div className="flex justify-center items-center">
-                <h1 className="text-4xl font-bold">You are not a manager but you can add yourself as an admin</h1>
-                <Link href="/admin"> here </Link>
+                <h1 className="text-4xl font-bold p-3">You are not a manager but you can </h1>
+                <Link className="text-4xl font-bold underline" href="/admin"> add yourself as a Manager (as an admin) </Link>
             </div>
         )
     }

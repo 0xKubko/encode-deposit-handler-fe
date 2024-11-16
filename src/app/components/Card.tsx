@@ -1,4 +1,5 @@
 import React from "react";
+import Image from 'next/image';
 
 interface CardProps {
     children: React.ReactNode;
@@ -9,8 +10,8 @@ interface CardProps {
 export function Card({ children, title, imgSrc }: CardProps) {
     return (<div className="card bg-base-100 w-96 shadow-xl">
         {imgSrc && <figure>
-            <img
-                src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+            <Image
+                src={imgSrc}
                 alt={title} />
         </figure>
         }
