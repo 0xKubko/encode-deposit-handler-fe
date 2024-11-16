@@ -13,18 +13,18 @@ export default function Admin() {
   // todo: check if the user is an admin
   const isAdmin = true;
 
-  // State for the form inputs
-  const [bootcampName, setBootcampName] = useState("");
-  const [bootcampDeadline, setBootcampDeadline] = useState("");
+  const [managerAddress, setManagerAddress] = useState("");
 
-  const handleCreateBootcamp = () => {
-    console.log("Creating Bootcamp:", {
-      name: bootcampName,
-      deadline: bootcampDeadline,
-    });
+  // todo: fetch this from the contract
+  const currentManagers = ["0x1234", "0x5678"];
 
-    // todo: call the contract to create a new bootcamp - using viem
-    return true;
+  const handleAddManager = () => {
+    console.log("Adding Manager");
+    // todo: call the contract to add manager
+  };
+
+  const handleRemoveManager = () => {
+    console.log("Removing Manager");
   };
 
   if (!isAdmin) {
@@ -34,41 +34,28 @@ export default function Admin() {
   return (
     <div className="flex flex-col items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <h1>Admin Page</h1>
-      <p>
-        Here, you can create a new bootcamp. To modify an existing one, go to
-        the bootcamp detail page.
-      </p>
+      <p>Here, you can add and remove bootcamp managers.</p>
 
-      {/* Input Form for Creating a Bootcamp */}
+      <h2>Current Managers</h2>
+      {currentManagers.map((manager) => (
+        <div>{manager}</div>
+      ))}
+
+      {/* Input Form for Adding a Manager */}
       <div className="flex flex-col gap-4 w-full max-w-md">
         <label className="flex flex-col">
-          <span>Bootcamp Name:</span>
+          <span>Manager Address:</span>
           <input
             type="text"
-            value={bootcampName}
-            onChange={(e) => setBootcampName(e.target.value)}
-            placeholder="Enter bootcamp name"
+            value={managerAddress}
+            onChange={(e) => setManagerAddress(e.target.value)}
+            placeholder="Enter manager address"
             className="border rounded px-3 py-2"
           />
         </label>
 
-        <label className="flex flex-col">
-          <span>Bootcamp Deadline (in seconds since epoch):</span>
-          <input
-            type="number"
-            value={bootcampDeadline}
-            onChange={(e) => setBootcampDeadline(e.target.value)}
-            placeholder="Enter deadline (e.g., 1800000000)"
-            className="border rounded px-3 py-2"
-          />
-        </label>
-
-        <Button
-          onClick={handleCreateBootcamp}
-          disabled={!bootcampName || !bootcampDeadline}
-        >
-          Create Bootcamp
-        </Button>
+        <Button onClick={handleAddManager}>Add Manager</Button>
+        <Button onClick={handleRemoveManager}>Remove Manager</Button>
       </div>
     </div>
   );
