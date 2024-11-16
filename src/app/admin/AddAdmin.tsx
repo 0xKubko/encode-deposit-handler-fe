@@ -31,11 +31,11 @@ export default function AddAdmin() {
         }
         if (account.address) {
             const isManager = await addressIsManager(adminAddress as `0x${string}`);
-            
-            if(isManager.ok && isManager.value){
+
+            if (isManager.ok && isManager.value) {
                 setError("This address is already a manager")
                 return;
-            } else if (!isManager.ok){
+            } else if (!isManager.ok) {
                 setError(isManager.error.message)
                 return;
             }
@@ -43,7 +43,7 @@ export default function AddAdmin() {
             setIsLoading(true);
             addAdmin(adminAddress as `0x${string}`).then(
                 result => {
-                    if (result.ok) {                        
+                    if (result.ok) {
                         setTx(result.value);
                         setError(null); // Clear error if submission is successful
                     } else {
@@ -68,7 +68,7 @@ export default function AddAdmin() {
                     onChange={handleInputChange}
                 />
                 {error && <p className="text-red-500">{error}</p>}
-                {isLoading && tx ===null && <span className="loading loading-dots loading-lg"></span>}
+                {isLoading && tx === null && <span className="loading loading-dots loading-lg"></span>}
                 {tx !== null && <a href={`${blockExplorer}/tx/${tx}`}>See on the explorer!</a>}
                 <div className="modal-action">
                     {!tx && <button className="btn" onClick={handleSubmit}>Submit</button>}
