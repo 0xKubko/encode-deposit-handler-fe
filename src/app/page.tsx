@@ -14,7 +14,7 @@ export default function Home() {
 
   if (account.isDisconnected || isAdmin || isManager) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-screen">
+      <div className="flex flex-col justify-center items-center">
         <h1 className="text-4xl font-bold mb-4">Encode Bootcamp Deposits</h1>
         <ConnectButton />
         {isAdmin && <button className="btn btn-primary" onClick={() => router.push('/admin')}>Admin</button>}

@@ -71,7 +71,7 @@ export default function AddAdmin() {
                 {isLoading && tx ===null && <span className="loading loading-dots loading-lg"></span>}
                 {tx !== null && <a href={`${blockExplorer}/tx/${tx}`}>See on the explorer!</a>}
                 <div className="modal-action">
-                    <button className="btn" onClick={handleSubmit}>Submit</button>
+                    {!tx && <button className="btn" onClick={handleSubmit}>Submit</button>}
                     <button className="btn" onClick={() => setVisible(false)}>Close</button>
                 </div>
             </Modal>

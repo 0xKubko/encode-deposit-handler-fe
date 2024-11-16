@@ -31,11 +31,11 @@ export default function RemoveManager() {
         }
         if (account.address) {
             const isManager = await addressIsManager(managerAddress as `0x${string}`);
-            
-            if(isManager.ok && !isManager.value){
+
+            if (isManager.ok && !isManager.value) {
                 setError("This address is not a manager")
                 return;
-            } else if (!isManager.ok){
+            } else if (!isManager.ok) {
                 setError(isManager.error.message)
                 return;
             }
@@ -43,7 +43,7 @@ export default function RemoveManager() {
             setIsLoading(true);
             removeManager(managerAddress as `0x${string}`).then(
                 result => {
-                    if (result.ok) {                        
+                    if (result.ok) {
                         setTx(result.value);
                         setError(null); // Clear error if submission is successful
                     } else {
@@ -68,10 +68,10 @@ export default function RemoveManager() {
                     onChange={handleInputChange}
                 />
                 {error && <p className="text-red-500">{error}</p>}
-                {isLoading && tx ===null && <span className="loading loading-dots loading-lg"></span>}
+                {isLoading && tx === null && <span className="loading loading-dots loading-lg"></span>}
                 {tx !== null && <a href={`${blockExplorer}/tx/${tx}`}>See on the explorer!</a>}
                 <div className="modal-action">
-                    <button className="btn" onClick={handleSubmit}>Submit</button>
+                    {!tx && <button className="btn" onClick={handleSubmit}>Submit</button>}
                     <button className="btn" onClick={() => setVisible(false)}>Close</button>
                 </div>
             </Modal>

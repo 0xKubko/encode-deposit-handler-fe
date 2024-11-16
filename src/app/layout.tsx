@@ -3,7 +3,8 @@ import localFont from "next/font/local";
 import "./styles/globals.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { Providers } from "./providers";
-import { AccountLayout } from "./components/AccountLayout";
+import { AccountLayout } from "./components/Layout/AccountLayout";
+import { Menu } from "./components/Layout/Menu";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,7 +34,10 @@ export default function RootLayout({
       >
         <Providers>
           <AccountLayout>
-            {children}
+          <div className="min-h-screen">
+            <Menu />
+              {children}
+            </div>
           </AccountLayout>
         </Providers>
       </body>
