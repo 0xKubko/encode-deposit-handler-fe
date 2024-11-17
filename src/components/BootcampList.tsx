@@ -1,79 +1,66 @@
+"use client";
+
 import Link from "next/link";
-import { bootcamps } from "@/placeholderBootcampData";
+import { useEffect, useState } from "react";
+import {
+  Bootcamp,
+  fetchBootcampDetails,
+} from "@/app/queries/fetchBootcampDetails";
 
 export const BootcampList = () => {
-  // todo: fetch bootcamps from the factory contract using viem
-  // const bootcampFactoryAddress =
-  //   process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS;
+  const [bootcamps, setBootcamps] = useState<Bootcamp[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchBootcamps = async () => {
+    setLoading(true);
+    const data = await fetchBootcampDetails();
+
+    if (data instanceof Error) {
+      setError(data.message);
+      setBootcamps(null);
+    } else {
+      setBootcamps(data);
+      setError(null);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchBootcamps();
+  }, []);
 
   return (
     <div className="flex flex-col w-[50%]">
-      <h3>upcoming bootcamps:</h3>
-      <div className="flex flex-row justify-between">
-        {bootcamps.map((bootcamp) => {
-          // Only return bootcamps that have not started yet
-          if (bootcamp.start > Math.floor(Date.now() / 1000)) {
-            return (
-              <>
-                <Link href={`bootcamp-detail?id=${bootcamp.id}`}>
-                  <div
-                    className="flex p-8 border-4 border-black/60"
-                    key={bootcamp.address}
-                  >
-                    {bootcamp.name} - {bootcamp.address}
-                  </div>
-                </Link>
-              </>
-            );
-          }
-          return null; // Return null for bootcamps that are already started
-        })}
-      </div>
-      <h3>currently running bootcamps:</h3>
-      <div className="flex flex-row justify-between">
-        {bootcamps.map((bootcamp) => {
-          // Only return bootcamps that are currently running
-          if (
-            bootcamp.start <= Math.floor(Date.now() / 1000) &&
-            bootcamp.deadline > Math.floor(Date.now() / 1000)
-          ) {
-            return (
-              <>
-                <Link href={`bootcamp-detail?id=${bootcamp.id}`}>
-                  <div
-                    className="flex p-8 border-4 border-black/60"
-                    key={bootcamp.address}
-                  >
-                    {bootcamp.name} - {bootcamp.address}
-                  </div>
-                </Link>
-              </>
-            );
-          }
-          return null; // Return null for bootcamps that are not currently running
-        })}
-      </div>
-      <h3>finished bootcamps:</h3>
-      <div className="flex flex-row justify-between">
-        {bootcamps.map((bootcamp) => {
-          // Only return bootcamps that have finished
-          if (bootcamp.deadline <= Math.floor(Date.now() / 1000)) {
-            return (
-              <>
-                <Link href={`bootcamp-detail?id=${bootcamp.id}`}>
-                  <div
-                    className="flex p-8 border-4 border-black/60"
-                    key={bootcamp.address}
-                  >
-                    {bootcamp.name} - {bootcamp.address}
-                  </div>
-                </Link>
-              </>
-            );
-          }
-          return null; // Return null for bootcamps that are not finished
-        })}
-      </div>
+      {loading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>Error: {error}</div>
+      ) : !bootcamps ? (
+        <div>No bootcamps found</div>
+      ) : (
+        <>
+          <h3>all bootcamps:</h3>
+          <div className="flex flex-col gap-2 justify-between">
+            {bootcamps.map((bootcamp) => {
+              return (
+                <div key={bootcamp.id}>
+                  <Link href={`bootcamp-detail?id=${bootcamp.id}`}>
+                    <div className="flex p-8 border-4 border-black/60">
+                      {bootcamp.id} - {bootcamp.bootcampAddress}
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+          <h3>currently running bootcamps:</h3>
+          todo: based on the start time and deadline
+          <h3>finished bootcamps:</h3>
+          todo: based on the start time and deadline
+        </>
+      )}
     </div>
   );
 };
