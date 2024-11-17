@@ -15,7 +15,7 @@ export default function Admin() {
 
   const [managerAddress, setManagerAddress] = useState("");
 
-  // todo: fetch this from the contract
+  // todo: fetch this from backend as there is no list on-chain
   const currentManagers = ["0x1234", "0x5678"];
 
   const handleAddManager = () => {
@@ -38,7 +38,7 @@ export default function Admin() {
 
       <h2>Current Managers</h2>
       {currentManagers.map((manager) => (
-        <div>{manager}</div>
+        <div key={manager}>{manager}</div>
       ))}
 
       {/* Input Form for Adding a Manager */}
