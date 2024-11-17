@@ -41,7 +41,7 @@ export default function Admin() {
   // todo: fetch this from backend as there is no list on-chain
   const currentManagers = ["0x1234", "0x5678"];
 
-  async function handleAddManager() {
+  const handleAddManager = async () => {
     try {
       const managerRole = await readContract(config, {
         abi: BootcampFactoryAbi,
@@ -64,9 +64,9 @@ export default function Admin() {
     } catch (error) {
       return error as Error;
     }
-  }
+  };
 
-  async function handleRemoveManager() {
+  const handleRemoveManager = async () => {
     try {
       const managerRole = await readContract(config, {
         abi: BootcampFactoryAbi,
@@ -89,7 +89,7 @@ export default function Admin() {
     } catch (error) {
       return error as Error;
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
