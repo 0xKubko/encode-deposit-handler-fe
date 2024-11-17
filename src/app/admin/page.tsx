@@ -9,16 +9,11 @@ import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
 import { checkIsAdmin } from "@/app/queries/checkIsAdmin";
 
 export default function Admin() {
-  const { isConnected, address: walletAddress } = useAccount();
+  const { address: walletAddress } = useAccount();
   const [hydrated, setHydrated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState<Boolean | Error>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean | Error>(false);
   const [managerAddress, setManagerAddress] = useState("");
-  const {
-    data: hash,
-    isPending,
-    writeContract,
-    error: writeError,
-  } = useWriteContract();
+  const { writeContract } = useWriteContract();
 
   // auxillary functions
   const fetchAdminStatus = async () => {

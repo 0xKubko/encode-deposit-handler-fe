@@ -10,26 +10,20 @@ import {
 } from "@/app/queries/fetchBootcampDetail";
 import { checkIsAdmin } from "@/app/queries/checkIsAdmin";
 import { useWriteContract } from "wagmi";
-import { parseAbi } from "viem";
 import { checkIsPaused } from "@/app/queries/checkIsPaused";
 import { DepositHandlerAbi } from "@/abi/DepositHandler";
 
 export default function BootcampDetail() {
-  const { isConnected, address: walletAddress } = useAccount();
+  const { address: walletAddress } = useAccount();
   const [bootcamp, setBootcamp] = useState<Bootcamp | null>(null);
   const [emergencyWithdrawWallet, setEmergencyWithdrawWallet] = useState("");
   const [clearedUsers, setClearedUsers] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState<Boolean | Error>(false);
-  const [isPaused, setIsPaused] = useState<Boolean | Error>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean | Error>(false);
+  const [isPaused, setIsPaused] = useState<boolean | Error>(false);
 
-  const {
-    data: hash,
-    isPending,
-    writeContract,
-    error: writeError,
-  } = useWriteContract();
+  const { writeContract, error: writeError } = useWriteContract();
 
   const params = useSearchParams();
   const id = params.get("id");

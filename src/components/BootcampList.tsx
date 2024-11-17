@@ -13,7 +13,7 @@ export const BootcampList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
-  const { isConnected, address: walletAddress } = useAccount();
+  const { isConnected } = useAccount();
 
   const fetchBootcamps = async () => {
     setLoading(true);

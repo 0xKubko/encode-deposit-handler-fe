@@ -7,20 +7,15 @@ import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
 import { checkIsManager } from "@/app/queries/checkIsManager";
 
 export default function Manager() {
-  const { isConnected, address: walletAddress } = useAccount();
+  const { address: walletAddress } = useAccount();
   const [hydrated, setHydrated] = useState(false);
-  const [isManager, setIsManager] = useState<Boolean | Error>(false);
+  const [isManager, setIsManager] = useState<boolean | Error>(false);
   const [bootcampName, setBootcampName] = useState("");
   const [bootcampDepositAmount, setBootcampDepositAmount] = useState("");
   const [bootcampDepositToken, setBootcampDepositToken] = useState("");
   const [bootcampDuration, setBootcampDuration] = useState("");
   const [bootcampDeadline, setBootcampDeadline] = useState("");
-  const {
-    data: hash,
-    isPending,
-    writeContract,
-    error: writeError,
-  } = useWriteContract();
+  const { writeContract } = useWriteContract();
 
   // auxillary functions
   const fetchManagerStatus = async () => {

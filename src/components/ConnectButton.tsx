@@ -10,8 +10,8 @@ import { checkIsManager } from "@/app/queries/checkIsManager";
 export const ConnectButton = () => {
   const { isConnected, address: walletAddress, chain } = useAccount();
   const [hydrated, setHydrated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState<Boolean | Error>(false); // State for admin status
-  const [isManager, setIsManager] = useState<Boolean | Error>(false); // State for manager status
+  const [isAdmin, setIsAdmin] = useState<boolean | Error>(false); // State for admin status
+  const [isManager, setIsManager] = useState<boolean | Error>(false); // State for manager status
 
   // auxillary functions
   const fetchAdminStatus = async () => {
