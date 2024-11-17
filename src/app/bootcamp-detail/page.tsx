@@ -12,6 +12,7 @@ import { checkIsAdmin } from "@/app/queries/checkIsAdmin";
 import { useWriteContract } from "wagmi";
 import { parseAbi } from "viem";
 import { checkIsPaused } from "@/app/queries/checkIsPaused";
+import { DepositHandlerAbi } from "@/abi/DepositHandler";
 
 export default function BootcampDetail() {
   const { isConnected, address: walletAddress } = useAccount();
@@ -82,28 +83,46 @@ export default function BootcampDetail() {
   };
 
   const handleTogglePause = async () => {
-    console.log("Toggling Pause");
     const functionName = isPaused ? "unpause" : "pause"; // Toggle between pause and unpause
     console.log(
       `${functionName === "pause" ? "Pausing" : "Unpausing"} the contract...`
     );
-    writeContract({
-      abi: parseAbi(["function pause() public", "function unpause() public"]),
-      address: bootcamp?.bootcampAddress as `0x${string}`,
-      functionName: functionName,
-      args: [],
-    });
+
+    // notice: this wont work because the contract has pause/unpause functions private - need to update the contract first
+    // writeContract({
+    //   abi: DepositHandlerAbi,
+    //   address: bootcamp?.bootcampAddress as `0x${string}`,
+    //   functionName: functionName,
+    //   args: [],
+    // });
     // todo: handle silent ignores when the call reverts
   };
 
   const handleEmergencyWithdraw = () => {
-    console.log("Emergency Withdraw");
-    // todo
+    // todo: check if the wallet is a manager, not admin
+
+    // notice: this wont work because the contract requires emergencyWithdraw approval first - will change in the contract soon
+    // writeContract({
+    //   abi: DepositHandlerAbi,
+    //   address: bootcamp?.bootcampAddress as `0x${string}`,
+    //   functionName: "emergencyWithdraw",
+    //   args: [],
+    // });
+
+    // todo: add some pending, and success/error handling. maybe some transaction receipt?
+
+    console.log("error", writeError);
+
+    return true;
   };
 
   const handleClearUsers = () => {
-    console.log("Clearing Users");
-    // todo
+    writeContract({
+      abi: DepositHandlerAbi,
+      address: bootcamp?.bootcampAddress as `0x${string}`,
+      functionName: "updateStatusBatch",
+      args: [clearedUsers as `0x${string}`[], 2], // 2 is the status for cleared = Status.Passed
+    });
   };
 
   return (
