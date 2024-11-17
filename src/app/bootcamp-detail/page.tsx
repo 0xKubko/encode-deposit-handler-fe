@@ -1,117 +1,186 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { bootcamps } from "../../placeholderBootcampData";
-import { Button } from "@radix-ui/themes";
 import { useAccount } from "wagmi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Button, TextArea, TextField } from "@radix-ui/themes";
+import {
+  Bootcamp,
+  fetchBootcampDetail,
+} from "@/app/queries/fetchBootcampDetail";
+import { checkIsAdmin } from "@/app/queries/checkIsAdmin";
+import { useWriteContract } from "wagmi";
+import { parseAbi } from "viem";
+import { checkIsPaused } from "@/app/queries/checkIsPaused";
 
 export default function BootcampDetail() {
-  // get the user account address
   const { isConnected, address: walletAddress } = useAccount();
-  const [clearedUsers, setClearedUsers] = useState<string[]>([]);
+  const [bootcamp, setBootcamp] = useState<Bootcamp | null>(null);
   const [emergencyWithdrawWallet, setEmergencyWithdrawWallet] = useState("");
+  const [clearedUsers, setClearedUsers] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState<Boolean | Error>(false);
+  const [isPaused, setIsPaused] = useState<Boolean | Error>(false);
 
-  // todo: useSearchParams for handling the id in the url
+  const {
+    data: hash,
+    isPending,
+    writeContract,
+    error: writeError,
+  } = useWriteContract();
+
   const params = useSearchParams();
   const id = params.get("id");
-  console.log("id", id);
 
-  // todo: fetch data from the contract
+  // auxillary functions
+  const fetchBootcamp = async () => {
+    setLoading(true);
+    const data = await fetchBootcampDetail(Number(id));
 
-  // todo: check if the contract is paused
-  const paused = false;
+    if (data instanceof Error) {
+      setError(data.message);
+      setBootcamp(null);
+    } else {
+      setBootcamp(data);
+      setError(null);
+    }
 
-  // todo: check if the user is an admin
-  const isAdmin = true;
+    setLoading(false);
+  };
 
-  // todo: check if the user has already deposited
-  const deposited = false;
+  const fetchAdminStatus = async () => {
+    if (walletAddress) {
+      const adminStatus = await checkIsAdmin(walletAddress);
+      setIsAdmin(adminStatus); // Update admin status
+    } else {
+      setIsAdmin(false);
+    }
+  };
 
-  // fetching from the placeholder data for now
-  const bootcamp = bootcamps.find((bootcamp) => bootcamp.id === Number(id));
+  const fetchPausedStatus = async () => {
+    if (bootcamp) {
+      const pausedStatus = await checkIsPaused(bootcamp.bootcampAddress);
+      console.log("pausedStatus", pausedStatus);
+      setIsPaused(pausedStatus); // Update pause status
+    } else {
+      setIsPaused(false);
+    }
+  };
 
-  if (!bootcamp) {
-    return <>no bootcamp with this id was found</>;
-  }
+  useEffect(() => {
+    fetchBootcamp();
+    fetchAdminStatus();
+    fetchPausedStatus();
+  }, [id, walletAddress]);
 
-  const handleTogglePause = () => {
+  const deposited = false; // Replace with actual logic to check deposit status
+
+  const handleDeposit = () => {
+    console.log("Depositing");
+    // todo: handle deposit logic + approvals first
+  };
+
+  const handleTogglePause = async () => {
     console.log("Toggling Pause");
-    // something like this but queues up on-chain txn paused = !paused;
+    const functionName = isPaused ? "unpause" : "pause"; // Toggle between pause and unpause
+    console.log(
+      `${functionName === "pause" ? "Pausing" : "Unpausing"} the contract...`
+    );
+    writeContract({
+      abi: parseAbi(["function pause() public", "function unpause() public"]),
+      address: bootcamp?.bootcampAddress as `0x${string}`,
+      functionName: functionName,
+      args: [],
+    });
+    // todo: handle silent ignores when the call reverts
   };
 
   const handleEmergencyWithdraw = () => {
     console.log("Emergency Withdraw");
+    // todo
   };
 
   const handleClearUsers = () => {
     console.log("Clearing Users");
-    // todo: use clearedUsers from textarea
+    // todo
   };
 
   return (
     <div className="flex flex-col items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <h1>
-        {bootcamp.name} (# {bootcamp.id})
-      </h1>
-      <div className="flex items-center border-4 border-rose-900 p-10 rounded-[10] bg-rose-600 text-white">
-        Make sure to be accepted, if you are not and deposit, it will be lost
-      </div>
-
-      <div className="flex flex-row gap-4 items-center">
-        <div className="flex flex-col gap-2 items-center">
-          <h2>Start:</h2>
-          <p>{new Date(bootcamp.start * 1000).toLocaleString()}</p>
-        </div>
-        <div className="flex flex-col gap-2 items-center">
-          <h2>Deadline:</h2>
-          <p>{new Date(bootcamp.deadline * 1000).toLocaleString()}</p>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-4 items-center">
-        <h2>Bootcamp Address:</h2>
-        <p>{bootcamp.address}</p>
-      </div>
-
-      <div className="flex flex-row gap-4 items-center">
-        <Button>Deposit</Button>
-
-        {deposited ? (
-          <Button>Withdraw</Button>
-        ) : (
-          <Button disabled>Withdraw</Button>
-        )}
-      </div>
-
-      {isAdmin && (
+      {loading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>Error: {error}</div>
+      ) : !bootcamp ? (
+        <div>No bootcamp found</div>
+      ) : (
         <>
-          <h2>Admin Actions</h2>
-          {paused ? (
-            <Button onClick={handleTogglePause}>Unpause</Button>
-          ) : (
-            <Button onClick={handleTogglePause}>Pause</Button>
+          <h1>
+            {bootcamp.bootcampAddress} (# {bootcamp.id.toString()})
+          </h1>
+          <div className="flex items-center border-4 border-rose-900 p-10 rounded-[10] bg-rose-600 text-white">
+            Make sure to be accepted, if you are not and deposit, it will be
+            lost
+          </div>
+          <div className="flex flex-row gap-4 items-center">
+            <div className="flex flex-col gap-2 items-center">
+              <h2>Start:</h2>
+              {/* todo: handle start date from the contract */}
+              {/* <p>{new Date(bootcamp.start * 1000).toLocaleString()}</p> */}
+              todo: based on the start time and deadline
+            </div>
+            <div className="flex flex-col gap-2 items-center">
+              <h2>Deadline:</h2>
+              {/* todo: handle deadline from the contract */}
+              {/* <p>{new Date(bootcamp.deadline * 1000).toLocaleString()}</p> */}
+              todo: based on the start time and deadline
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 items-center">
+            <h2>Bootcamp Address:</h2>
+            <p>{bootcamp.bootcampAddress}</p>
+          </div>
+          <div className="flex flex-row gap-4 items-center">
+            <Button onClick={handleDeposit}>Deposit</Button>
+            {deposited ? (
+              <Button>Withdraw</Button>
+            ) : (
+              <Button disabled>Withdraw</Button>
+            )}
+          </div>
+          {isAdmin && (
+            <>
+              <h2>Admin Actions</h2>
+              {isPaused ? (
+                <Button onClick={handleTogglePause}>Unpause</Button>
+              ) : (
+                <Button onClick={handleTogglePause}>Pause</Button>
+              )}
+              <TextField.Root
+                value={emergencyWithdrawWallet}
+                onChange={(e) => setEmergencyWithdrawWallet(e.target.value)}
+                placeholder="Enter wallet address"
+                className="w-[50%]"
+              />
+              <Button onClick={handleEmergencyWithdraw}>
+                Emergency Withdraw
+              </Button>
+              <TextArea
+                placeholder="Enter wallet addresses, separate them by comma"
+                value={clearedUsers.join(", ")}
+                className="w-full"
+                onChange={(e) => {
+                  const addresses = e.target.value
+                    .split(",")
+                    .map((address) => address.trim())
+                    .filter((address) => address.length > 0);
+                  setClearedUsers(addresses);
+                }}
+              />
+              <Button onClick={handleClearUsers}>Clear Users</Button>
+            </>
           )}
-
-          <input
-            value={emergencyWithdrawWallet}
-            onChange={(e) => setEmergencyWithdrawWallet(e.target.value)}
-            placeholder="Enter wallet address"
-          />
-          <Button onClick={handleEmergencyWithdraw}>Emergency Withdraw</Button>
-
-          <input
-            type="textarea"
-            placeholder="Enter wallet addresses, separate them by comma"
-            onChange={(e) => {
-              const addresses = e.target.value
-                .split(",") // Split the input by commas
-                .map((address) => address.trim()) // Trim whitespace from each address
-                .filter((address) => address.length > 0); // Remove empty entries
-              setClearedUsers(addresses); // Update the state once with the processed array
-            }}
-          />
-          <Button onClick={handleClearUsers}>Clear Users</Button>
         </>
       )}
     </div>
