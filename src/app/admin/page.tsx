@@ -2,14 +2,17 @@
 
 import { Button } from "@radix-ui/themes";
 import { useAccount, useWriteContract } from "wagmi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { readContract } from "wagmi/actions";
 import { config } from "@/app/providers";
 import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
+import { checkIsAdmin } from "@/app/queries/checkIsAdmin";
 
 export default function Admin() {
-  // get the user account address
   const { isConnected, address: walletAddress } = useAccount();
+  const [hydrated, setHydrated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState<Boolean | Error>(false);
+  const [managerAddress, setManagerAddress] = useState("");
   const {
     data: hash,
     isPending,
@@ -17,12 +20,23 @@ export default function Admin() {
     error: writeError,
   } = useWriteContract();
 
-  // todo: fetch data from the contract
+  // auxillary functions
+  const fetchAdminStatus = async () => {
+    if (walletAddress) {
+      const adminStatus = await checkIsAdmin(walletAddress);
+      setIsAdmin(adminStatus); // Update admin status
+    } else {
+      setIsAdmin(false);
+    }
+  };
 
-  // todo: check if the user is an admin
-  const isAdmin = true;
+  useEffect(() => {
+    fetchAdminStatus();
 
-  const [managerAddress, setManagerAddress] = useState("");
+    setHydrated(true);
+  }, [walletAddress]); // Rerun when the wallet address changes
+
+  if (!hydrated) return null;
 
   // todo: fetch this from backend as there is no list on-chain
   const currentManagers = ["0x1234", "0x5678"];
@@ -77,36 +91,38 @@ export default function Admin() {
     }
   }
 
-  if (!isAdmin) {
-    return <>You are not an admin</>;
-  }
-
   return (
     <div className="flex flex-col items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <h1>Admin Page</h1>
-      <p>Here, you can add and remove bootcamp managers.</p>
+      {!isAdmin ? (
+        <p>You are not an admin</p>
+      ) : (
+        <>
+          <p>Here, you can add and remove bootcamp managers.</p>
 
-      <h2>Current Managers</h2>
-      {currentManagers.map((manager) => (
-        <div key={manager}>{manager}</div>
-      ))}
+          <h2>Current Managers</h2>
+          {currentManagers.map((manager) => (
+            <div key={manager}>{manager}</div>
+          ))}
 
-      {/* Input Form for Adding a Manager */}
-      <div className="flex flex-col gap-4 w-full max-w-md">
-        <label className="flex flex-col">
-          <span>Manager Address:</span>
-          <input
-            type="text"
-            value={managerAddress}
-            onChange={(e) => setManagerAddress(e.target.value)}
-            placeholder="Enter manager address"
-            className="border rounded px-3 py-2"
-          />
-        </label>
+          {/* Input Form for Adding a Manager */}
+          <div className="flex flex-col gap-4 w-full max-w-md">
+            <label className="flex flex-col">
+              <span>Manager Address:</span>
+              <input
+                type="text"
+                value={managerAddress}
+                onChange={(e) => setManagerAddress(e.target.value)}
+                placeholder="Enter manager address"
+                className="border rounded px-3 py-2"
+              />
+            </label>
 
-        <Button onClick={handleAddManager}>Add Manager</Button>
-        <Button onClick={handleRemoveManager}>Remove Manager</Button>
-      </div>
+            <Button onClick={handleAddManager}>Add Manager</Button>
+            <Button onClick={handleRemoveManager}>Remove Manager</Button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
