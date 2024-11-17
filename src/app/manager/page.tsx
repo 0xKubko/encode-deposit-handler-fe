@@ -1,12 +1,19 @@
 "use client";
 
 import { Button } from "@radix-ui/themes";
-import { useAccount } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 import { useState } from "react";
+import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
 
 export default function Manager() {
   // get the user account address
   const { isConnected, address: walletAddress } = useAccount();
+  const {
+    data: hash,
+    isPending,
+    writeContract,
+    error: writeError,
+  } = useWriteContract();
 
   // todo: fetch data from the contract
 
@@ -23,6 +30,24 @@ export default function Manager() {
       deadline: bootcampDeadline,
     });
 
+    const txn = writeContract({
+      abi: BootcampFactoryAbi,
+      address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
+        ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
+        : "0x0000000000000000000000000000000000000000",
+      functionName: "createBootcamp",
+      args: [
+        // todo: pass the correct arguments - just some placeholders for now
+        BigInt(100), // depositAmount
+        "0x6EEBe75caf9c579B3FBA9030760B84050283b50a", // depositToken
+        BigInt(bootcampDeadline), // duration
+        BigInt(bootcampDeadline), // deadline
+      ],
+    });
+    console.log("txn", txn);
+    console.log("hash", hash);
+    console.log("isPending", isPending);
+    console.log("writeError", writeError);
     // todo: call the contract to create a new bootcamp - using viem
     return true;
   };
