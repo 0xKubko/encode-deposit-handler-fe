@@ -12,6 +12,7 @@ export const BootcampList = () => {
   const [bootcamps, setBootcamps] = useState<Bootcamp[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(false);
   const { isConnected, address: walletAddress } = useAccount();
 
   const fetchBootcamps = async () => {
@@ -31,7 +32,10 @@ export const BootcampList = () => {
 
   useEffect(() => {
     fetchBootcamps();
+    setHydrated(true);
   }, []);
+
+  if (!hydrated) return null;
 
   return (
     <div className="flex flex-col w-[50%]">
