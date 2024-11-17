@@ -6,11 +6,13 @@ import {
   Bootcamp,
   fetchBootcampDetails,
 } from "@/app/queries/fetchBootcampDetails";
+import { useAccount } from "wagmi";
 
 export const BootcampList = () => {
   const [bootcamps, setBootcamps] = useState<Bootcamp[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isConnected, address: walletAddress } = useAccount();
 
   const fetchBootcamps = async () => {
     setLoading(true);
@@ -33,7 +35,9 @@ export const BootcampList = () => {
 
   return (
     <div className="flex flex-col w-[50%]">
-      {loading ? (
+      {!isConnected ? (
+        <div>Connect your wallet to view bootcamps</div>
+      ) : loading ? (
         <div>Loading...</div>
       ) : error ? (
         <div>Error: {error}</div>
