@@ -1,12 +1,21 @@
 "use client";
 
 import { Button } from "@radix-ui/themes";
-import { useAccount } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 import { useState } from "react";
+import { readContract } from "wagmi/actions";
+import { config } from "@/app/providers";
+import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
 
 export default function Admin() {
   // get the user account address
   const { isConnected, address: walletAddress } = useAccount();
+  const {
+    data: hash,
+    isPending,
+    writeContract,
+    error: writeError,
+  } = useWriteContract();
 
   // todo: fetch data from the contract
 
@@ -18,14 +27,55 @@ export default function Admin() {
   // todo: fetch this from backend as there is no list on-chain
   const currentManagers = ["0x1234", "0x5678"];
 
-  const handleAddManager = () => {
-    console.log("Adding Manager");
-    // todo: call the contract to add manager
-  };
+  async function handleAddManager() {
+    try {
+      const managerRole = await readContract(config, {
+        abi: BootcampFactoryAbi,
+        address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
+          ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
+          : "0x0000000000000000000000000000000000000000",
+        functionName: "MANAGER",
+        args: [],
+      });
 
-  const handleRemoveManager = () => {
-    console.log("Removing Manager");
-  };
+      const txn = writeContract({
+        abi: BootcampFactoryAbi,
+        address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
+          ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
+          : "0x0000000000000000000000000000000000000000",
+        functionName: "grantRole",
+        args: [managerRole, managerAddress as `0x${string}`],
+      });
+      return txn;
+    } catch (error) {
+      return error as Error;
+    }
+  }
+
+  async function handleRemoveManager() {
+    try {
+      const managerRole = await readContract(config, {
+        abi: BootcampFactoryAbi,
+        address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
+          ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
+          : "0x0000000000000000000000000000000000000000",
+        functionName: "MANAGER",
+        args: [],
+      });
+
+      const txn = writeContract({
+        abi: BootcampFactoryAbi,
+        address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
+          ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
+          : "0x0000000000000000000000000000000000000000",
+        functionName: "revokeRole",
+        args: [managerRole, managerAddress as `0x${string}`],
+      });
+      return txn;
+    } catch (error) {
+      return error as Error;
+    }
+  }
 
   if (!isAdmin) {
     return <>You are not an admin</>;
