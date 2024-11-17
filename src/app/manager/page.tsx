@@ -11,6 +11,9 @@ export default function Manager() {
   const [hydrated, setHydrated] = useState(false);
   const [isManager, setIsManager] = useState<Boolean | Error>(false);
   const [bootcampName, setBootcampName] = useState("");
+  const [bootcampDepositAmount, setBootcampDepositAmount] = useState("");
+  const [bootcampDepositToken, setBootcampDepositToken] = useState("");
+  const [bootcampDuration, setBootcampDuration] = useState("");
   const [bootcampDeadline, setBootcampDeadline] = useState("");
   const {
     data: hash,
@@ -43,25 +46,22 @@ export default function Manager() {
       deadline: bootcampDeadline,
     });
 
-    const txn = writeContract({
+    writeContract({
       abi: BootcampFactoryAbi,
       address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
         ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
         : "0x0000000000000000000000000000000000000000",
       functionName: "createBootcamp",
       args: [
-        // todo: pass the correct arguments - just some placeholders for now
-        BigInt(100), // depositAmount
-        "0x6EEBe75caf9c579B3FBA9030760B84050283b50a", // depositToken
-        BigInt(bootcampDeadline), // duration
-        BigInt(bootcampDeadline), // deadline
+        BigInt(bootcampDepositAmount),
+        bootcampDepositToken as `0x${string}`, // 0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359 for polygon usdc
+        BigInt(bootcampDuration), // 6 weeks is 3628800 seconds
+        BigInt(bootcampDeadline), // todo: add handling to this because contract reverts if deadline is in the past? wagmi gives silent error
       ],
     });
-    console.log("txn", txn);
-    console.log("hash", hash);
-    console.log("isPending", isPending);
-    console.log("writeError", writeError);
-    // todo: call the contract to create a new bootcamp - using viem
+
+    // todo: add some pending, and success/error handling. maybe some transaction receipt?
+
     return true;
   };
 
@@ -88,10 +88,44 @@ export default function Manager() {
                 placeholder="Enter bootcamp name"
                 className="border rounded px-3 py-2"
               />
+              todo: handle this either on-chain or on backend
             </label>
 
             <label className="flex flex-col">
-              <span>Bootcamp Deadline (in seconds since epoch):</span>
+              <span>Bootcamp Deposit Amount:</span>
+              <input
+                type="number"
+                value={bootcampDepositAmount}
+                onChange={(e) => setBootcampDepositAmount(e.target.value)}
+                placeholder="Enter deposit amount (e.g., 100)"
+                className="border rounded px-3 py-2"
+              />
+            </label>
+
+            <label className="flex flex-col">
+              <span>Bootcamp Deposit Token:</span>
+              <input
+                type="text"
+                value={bootcampDepositToken}
+                onChange={(e) => setBootcampDepositToken(e.target.value)}
+                placeholder="Enter deposit token address"
+                className="border rounded px-3 py-2"
+              />
+            </label>
+
+            <label className="flex flex-col">
+              <span>Bootcamp Duration (in seconds):</span>
+              <input
+                type="number"
+                value={bootcampDuration}
+                onChange={(e) => setBootcampDuration(e.target.value)}
+                placeholder="Enter duration in seconds (e.g., 1800000000)"
+                className="border rounded px-3 py-2"
+              />
+            </label>
+
+            <label className="flex flex-col">
+              <span>Bootcamp Deadline (as a UNIX timestamp):</span>
               <input
                 type="number"
                 value={bootcampDeadline}
