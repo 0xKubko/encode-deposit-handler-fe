@@ -40,8 +40,8 @@ export default function Manager() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <h1>Manager Page</h1>
+    <div className="flex flex-col items-center w-[30%] min-w-[500px] justify-center font-[family-name:var(--font-geist-sans)] m-auto">
+      <h1 className="text-3xl font-bold mb-5">Manager Page</h1>
       {!isManager ? (
         <div>You are not a manager</div>
       ) : (
@@ -52,7 +52,7 @@ export default function Manager() {
           </p>
 
           {/* Input Form for Creating a Bootcamp */}
-          <div className="flex flex-col gap-4 w-full max-w-md">
+          <div className="flex flex-col gap-4 w-full mt-4">
             <label className="flex flex-col">
               <span>Bootcamp Name:</span>
               <input
@@ -62,7 +62,6 @@ export default function Manager() {
                 placeholder="Enter bootcamp name"
                 className="border rounded px-3 py-2"
               />
-              todo: handle this either on-chain or on backend
             </label>
 
             <label className="flex flex-col">
