@@ -1,8 +1,8 @@
 'use client';
 
 import { usePathname } from 'next/navigation'
-import { useIsManager } from '../hooks/useIsManager';
-import { useIsAdmin } from '../hooks/useIsAdmin';
+import { useIsManager } from '../app/hooks/useIsManager';
+import { useIsAdmin } from '../app/hooks/useIsAdmin';
 import Link from 'next/link';
 
 export function Menu() {
@@ -15,7 +15,7 @@ export function Menu() {
              	<ul className="center m-0 flex list-none rounded-md bg-white p-1 shadow-[0_2px_10px] shadow-blackA4">
                  <li>
                 <Link
-						className="block select-none rounded px-3 py-2 text-[15px] font-medium leading-none text-violet11 no-underline outline-none hover:bg-violet3 focus:shadow-[0_0_0_2px] focus:shadow-violet7"
+						className="block select-none rounded px-3 py-2 text-[15px] font-medium leading-none text-violet11 no-underline outline-none hover:bg-violet3"
 						href="/"
 					>
                         <svg
@@ -36,7 +36,7 @@ export function Menu() {
                 {isAdmin && (
                     <li>
                     <Link
-						className="block select-none rounded px-3 py-2 text-[15px] font-medium leading-none text-violet11 no-underline outline-none hover:bg-violet3 focus:shadow-[0_0_0_2px] focus:shadow-violet7"
+						className="block select-none rounded px-3 py-2 text-[15px] font-medium leading-none text-violet11 no-underline outline-none hover:bg-violet3"
 						href="/admin"
 					>
 
@@ -73,7 +73,7 @@ export function Menu() {
                 {isManager && (
                     <li>
                     <Link
-						className="block select-none rounded px-3 py-2 text-[15px] font-medium leading-none text-violet11 no-underline outline-none hover:bg-violet3 focus:shadow-[0_0_0_2px] focus:shadow-violet7"
+						className="block select-none rounded px-3 py-2 text-[15px] font-medium leading-none text-violet11 no-underline outline-none hover:bg-violet3"
 						href="/manager"
 					>
                         <svg
