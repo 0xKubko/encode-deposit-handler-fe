@@ -12,6 +12,7 @@ import { useWriteContract } from "wagmi";
 import { checkIsPaused } from "@/app/queries/DepositHandler/checkIsPaused";
 import { DepositHandlerAbi } from "@/abi/DepositHandler";
 import { useIsAdmin } from "@/app/hooks/useIsAdmin";
+import Image from "next/image";
 
 export function BootcampDetail() {
   const { address: walletAddress } = useAccount();
@@ -21,6 +22,8 @@ export function BootcampDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState<boolean | Error>(false);
+  const [bootcampName, setBootcampName] = useState<string>("");
+  const [bootcampImgSrc, setBootcampImgSrc] = useState<string>("");
   const isAdmin = useIsAdmin();
 
   const { writeContract, error: writeError } = useWriteContract();
@@ -39,6 +42,16 @@ export function BootcampDetail() {
     } else {
       setBootcamp(data);
       setError(null);
+      if (data.id == BigInt(1)) {
+        setBootcampName("Advanced Solidity Bootcamp");
+        setBootcampImgSrc("/advancedSol.png");
+      } else if (data.id === BigInt(2)) {
+        setBootcampName("ZK and Scaling Bootcamp");
+        setBootcampImgSrc("/zkScaling.png");
+      } else {
+        setBootcampName("EVM Bootcamp");
+        setBootcampImgSrc("/evm.png");
+      }
     }
 
     setLoading(false);
@@ -110,7 +123,7 @@ export function BootcampDetail() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="flex flex-col items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
       {loading ? (
         <div>Loading...</div>
       ) : error ? (
@@ -118,71 +131,81 @@ export function BootcampDetail() {
       ) : !bootcamp ? (
         <div>No bootcamp found</div>
       ) : (
-        <>
-          <h1>
-            {bootcamp.bootcampAddress} (# {bootcamp.id.toString()})
-          </h1>
-          <div className="flex items-center border-4 border-rose-900 p-10 rounded-[10] bg-rose-600 text-white">
-            Make sure to be accepted, if you are not and deposit, it will be
-            lost
-          </div>
-          <div className="flex flex-row gap-4 items-center">
-            <div className="flex flex-col gap-2 items-center">
-              <h2>Start:</h2>
-              {/* todo: handle deadline from the contract */}
+        <div className="flex flex-row min-w-[1000px] w-[80%] justify-between">
+          <div className="flex flex-col gap-3 w-[50%]">
+            <h1 className="text-3xl font-bold">{bootcampName}</h1>
+            <div className="flex items-center border-4 border-rose-900 p-5 rounded-md bg-rose-600 text-white my-3 justify-center">
+              Make sure to be accepted, if you are not and deposit, it will be
+              lost
+            </div>
+            <div className="flex flex-row gap-4 items-center justify-between">
+              <div className="flex flex-col gap-2">
+                <b>Start:</b>
+                {/* todo: handle deadline from the contract */}
                 <p>{new Date(1732492800 * 1000).toLocaleDateString()}</p>
+              </div>
+              <div className="flex flex-col gap-2">
+                <b>Deadline:</b>
+                {/* todo: handle deadline from the contract */}
+                <p>{new Date(1732492800 * 1000).toLocaleDateString()}</p>
+              </div>
             </div>
-            <div className="flex flex-col gap-2 items-center">
-              <h2>Deadline:</h2>
-              {/* todo: handle deadline from the contract */}
-              <p>{new Date(1732492800 * 1000).toLocaleDateString()}</p>
+            <div className="flex flex-col gap-4">
+              <b>Bootcamp Address:</b> {bootcamp.bootcampAddress}
             </div>
-          </div>
-          <div className="flex flex-col gap-4 items-center">
-            <h2>Bootcamp Address:</h2>
-            <p>{bootcamp.bootcampAddress}</p>
-          </div>
-          <div className="flex flex-row gap-4 items-center">
-            <Button onClick={handleDeposit}>Deposit</Button>
-            {deposited ? (
-              <Button>Withdraw</Button>
-            ) : (
-              <Button disabled>Withdraw</Button>
+            <div className="flex flex-row items-center justify-between">
+              <Button className="w-[49%]" onClick={handleDeposit}>Deposit</Button>
+              {deposited ? (
+                <Button className="w-[49%]">Withdraw</Button>
+              ) : (
+                <Button className="w-[49%]" disabled>Withdraw</Button>
+              )}
+            </div>
+            {isAdmin && (
+              <div className="flex flex-col w-full border-t mt-5 pt-5 gap-3">
+                <b>Admin Actions</b>
+                {isPaused ? (
+                  <Button onClick={handleTogglePause}>Unpause</Button>
+                ) : (
+                  <Button onClick={handleTogglePause}>Pause</Button>
+                )}
+                <div className="w-[100px] border-t"></div>
+                <TextField.Root
+                  value={emergencyWithdrawWallet}
+                  onChange={(e) => setEmergencyWithdrawWallet(e.target.value)}
+                  placeholder="Enter wallet address"
+                  className="w-[50%]"
+                />
+                <Button onClick={handleEmergencyWithdraw}>
+                  Emergency Withdraw
+                </Button>
+                <div className="w-[100px] border-t"></div>
+                <TextArea
+                  placeholder="Enter wallet addresses, separate them by comma"
+                  value={clearedUsers.join(", ")}
+                  className="w-full"
+                  onChange={(e) => {
+                    const addresses = e.target.value
+                      .split(",")
+                      .map((address) => address.trim())
+                      .filter((address) => address.length > 0);
+                    setClearedUsers(addresses);
+                  }}
+                />
+                <Button onClick={handleClearUsers}>Clear Users</Button>
+              </div>
             )}
           </div>
-          {isAdmin && (
-            <>
-              <h2>Admin Actions</h2>
-              {isPaused ? (
-                <Button onClick={handleTogglePause}>Unpause</Button>
-              ) : (
-                <Button onClick={handleTogglePause}>Pause</Button>
-              )}
-              <TextField.Root
-                value={emergencyWithdrawWallet}
-                onChange={(e) => setEmergencyWithdrawWallet(e.target.value)}
-                placeholder="Enter wallet address"
-                className="w-[50%]"
-              />
-              <Button onClick={handleEmergencyWithdraw}>
-                Emergency Withdraw
-              </Button>
-              <TextArea
-                placeholder="Enter wallet addresses, separate them by comma"
-                value={clearedUsers.join(", ")}
-                className="w-full"
-                onChange={(e) => {
-                  const addresses = e.target.value
-                    .split(",")
-                    .map((address) => address.trim())
-                    .filter((address) => address.length > 0);
-                  setClearedUsers(addresses);
-                }}
-              />
-              <Button onClick={handleClearUsers}>Clear Users</Button>
-            </>
-          )}
-        </>
+          <div className="flex items-center justify-center">
+            <Image
+              src={bootcampImgSrc}
+              alt="Bootcamp Image"
+              width={676}
+              height={466}
+              className="mb-5"
+            />
+          </div>
+        </div>
       )}
     </div>
   );
