@@ -8,7 +8,7 @@ import { useIsManager } from "../hooks/useIsManager";
 import { contractFactoryAddress } from "../const";
 
 export default function Manager() {
-  const isManager = useIsManager();
+  const { isManager } = useIsManager();
   const [bootcampName, setBootcampName] = useState("");
   const [bootcampDepositAmount, setBootcampDepositAmount] = useState("");
   const [bootcampDepositToken, setBootcampDepositToken] = useState("");
