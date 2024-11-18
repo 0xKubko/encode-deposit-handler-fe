@@ -1,18 +1,14 @@
 import { useAccount } from 'wagmi';
-import { addressIsAdmin } from '../functions/BootcampFactory/hasRole';
+import { checkIsAdmin } from '../queries/BootcampFactory/checkRole';
 import { useQuery } from '@tanstack/react-query';
+
 
 
 export function useIsAdmin(){
     const account = useAccount();
     const { data: isAdmin, refetch: refetchAdmin } = useQuery({
         queryKey: ['isAdmin', account.address],
-        queryFn: () => addressIsAdmin(account.address || '0x').then((result) => {
-            if (result.ok) {
-                return result.value;
-            }
-            return false;
-        }),
+        queryFn: () => checkIsAdmin(account.address || '0x'),
         enabled: !!account.address, // Ensure the query only runs when account.address is available
     });
 

@@ -5,7 +5,7 @@ import { contractFactoryAddress} from '@/app/const'
 import { Result } from '@/app/types';
 
 
-export async function createBootcamp(depositAmount: bigint, depositToken: `0x${string}`, bootcampStartTime: bigint ): Promise<Result<`0x${string}`>> {
+export async function createBootcamp(depositAmount: bigint, depositToken: `0x${string}`, bootcampStartTime: bigint ): Promise<`0x${string}` | Error> {
     try {
         console.log(depositAmount, depositToken, bootcampStartTime);
         
@@ -19,9 +19,9 @@ export async function createBootcamp(depositAmount: bigint, depositToken: `0x${s
                 bootcampStartTime
             ],
           })
-        return { ok: true, value: result };
+        return result;
     } catch (error) {
         console.error(error);
-        return { ok: false, error: error as Error };
+        return error as Error;
     }
 }

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./styles/globals.css";
-import '@rainbow-me/rainbowkit/styles.css';
+import "@radix-ui/themes/styles.css";
+import "@rainbow-me/rainbowkit/styles.css";
+import "./globals.css";
 import { Providers } from "./providers";
 import { Menu } from "./components/Menu";
 

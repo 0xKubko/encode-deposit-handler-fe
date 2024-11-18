@@ -1,12 +1,12 @@
 'use client';
 
 import { useAccount } from "wagmi";
-import { addManager } from "../functions/BootcampFactory/addManager";
+import { addManager } from "../queries/BootcampFactory/addManager";
 import { useState } from "react";
 import { checkAddress } from "../utils/checkAddress";
 import { Modal } from "../components/Modal";
 import { blockExplorer } from "../const";
-import { addressIsManager } from "../functions/BootcampFactory/hasRole";
+import { checkIsManager } from "../queries/BootcampFactory/checkRole";
 
 export default function AddManager() {
     const account = useAccount();
@@ -30,7 +30,7 @@ export default function AddManager() {
             return;
         }
         if (account.address) {
-            const isManager = await addressIsManager(managerAddress as `0x${string}`);
+            const isManager = await checkIsManager(managerAddress as `0x${string}`);
             
             if(isManager.ok && isManager.value){
                 setError("This address is already a manager")

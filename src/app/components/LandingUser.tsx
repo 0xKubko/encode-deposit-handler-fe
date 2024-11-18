@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from "@tanstack/react-query";
-import { Bootcamp, fetchBootcamps } from "../functions/BootcampFactory/fetchBootcamps";
+import { Bootcamp, fetchBootcamps } from "../queries/BootcampFactory/fetchBootcamps";
 import { Card } from "./Card";
 
 export function LandingUser(){

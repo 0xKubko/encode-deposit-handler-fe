@@ -1,41 +1,41 @@
 import { writeContract } from '@wagmi/core'
 import { config } from '@/configs/wagmi'
 import { abi as bootcampFactoryAbi } from '@/abi/BootcampFactory.json'
-import { contractFactoryAddress, managerCode } from '@/app/const'
+import { contractFactoryAddress, adminCode} from '@/app/const'
 import { Result } from '@/app/types';
 
-export async function addManager(newManagerAddress: `0x${string}`): Promise<Result<`0x${string}`>> {
+export async function addAdmin(newAdminAddress: `0x${string}`): Promise<`0x${string}` | Error> {
     try {
         const result : `0x${string}` = await writeContract(config, {
             abi: bootcampFactoryAbi,
             address: contractFactoryAddress,
             functionName: 'grantARole',
             args: [
-                managerCode,
-                newManagerAddress,
+                adminCode,
+                newAdminAddress,
             ],
           })
-        return { ok: true, value: result };
+        return result ;
     } catch (error) {
         console.error(error);
-        return { ok: false, error: error as Error };
+        return error as Error;
     }
 }
 
-export async function removeManager(managerAddress: `0x${string}`): Promise<Result<`0x${string}`>> {
+export async function removeAdmin(adminAddress: `0x${string}`): Promise<`0x${string}`| Error> {
     try {
         const result : `0x${string}` = await writeContract(config, {
             abi: bootcampFactoryAbi,
             address: contractFactoryAddress,
             functionName: 'revokeARole',
             args: [
-                managerCode,
-                managerAddress,
+                adminCode,
+                adminAddress,
             ],
           })
-        return { ok: true, value: result };
+        return result;
     } catch (error) {
         console.error(error);
-        return { ok: false, error: error as Error };
+        return error as Error;
     }
 } 
