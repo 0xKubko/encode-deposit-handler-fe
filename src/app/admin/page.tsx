@@ -13,7 +13,7 @@ export default function Admin() {
   const [error, setError] = useState<string | null>(null);
 
   // todo: fetch this from backend as there is no list on-chain
-  const currentManagers = ["0x1234", "0x5678"];
+  const currentManagers = ["0x32776d56FcC46978549f18371112C90233210aC8", "0xC6CbDd7D90458c5e1003DdE243bF1561efAeE516"];
 
   const handleAddManager = async () => {
     setError(null);

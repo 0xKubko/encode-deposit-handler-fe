@@ -129,15 +129,13 @@ export function BootcampDetail() {
           <div className="flex flex-row gap-4 items-center">
             <div className="flex flex-col gap-2 items-center">
               <h2>Start:</h2>
-              {/* todo: handle start date from the contract */}
-              {/* <p>{new Date(bootcamp.start * 1000).toLocaleString()}</p> */}
-              todo: based on the start time and deadline
+              {/* todo: handle deadline from the contract */}
+              <p>{new Date(1731967022 * 1000).toLocaleString()}</p>
             </div>
             <div className="flex flex-col gap-2 items-center">
               <h2>Deadline:</h2>
               {/* todo: handle deadline from the contract */}
-              {/* <p>{new Date(bootcamp.deadline * 1000).toLocaleString()}</p> */}
-              todo: based on the start time and deadline
+              <p>{new Date(1735000000 * 1000).toLocaleString()}</p>
             </div>
           </div>
           <div className="flex flex-col gap-4 items-center">
