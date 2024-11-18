@@ -24,8 +24,8 @@ export function BootcampDetail() {
   const [isPaused, setIsPaused] = useState<boolean | Error>(false);
   const [bootcampName, setBootcampName] = useState<string>("");
   const [bootcampImgSrc, setBootcampImgSrc] = useState<string>("");
-  const isAdmin = useIsAdmin();
-
+  const {isAdmin} = useIsAdmin();
+  
   const { writeContract, error: writeError } = useWriteContract();
 
   const params = useSearchParams();
