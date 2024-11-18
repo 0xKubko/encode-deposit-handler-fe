@@ -24,7 +24,7 @@ export function BootcampDetail() {
   const [isPaused, setIsPaused] = useState<boolean | Error>(false);
   const [bootcampName, setBootcampName] = useState<string>("");
   const [bootcampImgSrc, setBootcampImgSrc] = useState<string>("");
-  const {isAdmin} = useIsAdmin();
+  const { isAdmin } = useIsAdmin();
   
   const { writeContract, error: writeError } = useWriteContract();
 
@@ -154,11 +154,15 @@ export function BootcampDetail() {
               <b>Bootcamp Address:</b> {bootcamp.bootcampAddress}
             </div>
             <div className="flex flex-row items-center justify-between">
-              <Button className="w-[49%]" onClick={handleDeposit}>Deposit</Button>
+              <Button className="w-[49%]" onClick={handleDeposit}>
+                Deposit
+              </Button>
               {deposited ? (
                 <Button className="w-[49%]">Withdraw</Button>
               ) : (
-                <Button className="w-[49%]" disabled>Withdraw</Button>
+                <Button className="w-[49%]" disabled>
+                  Withdraw
+                </Button>
               )}
             </div>
             {isAdmin && (
