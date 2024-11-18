@@ -76,7 +76,7 @@ export const BootcampList = () => {
                         Start:{" "}
                         {new Date(1732492800 * 1000).toLocaleDateString()}
                       </p>
-                      <div className="flex bg-blue-500 rounded-full p-2 text-white text-center justify-center items-center mt-2">
+                      <div className="flex bg-blue-500 rounded-full p-2 text-white justify-center items-center mt-2">
                         View More
                       </div>
                     </div>

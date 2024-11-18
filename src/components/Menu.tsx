@@ -11,7 +11,7 @@ export function Menu() {
   const { isManager } = useIsManager();
   const currentPath = usePathname();
   return (
-    <div className="flex flex-row w-full h-[100px] justify-between text-center items-center pl-7 pr-7 mb-10 border-b">
+    <div className="flex flex-row w-full h-[100px] justify-between items-center pl-7 pr-7 mb-10 border-b">
       <h1 className="text-3xl font-bold">
         <Link href="/">Encode Bootcamp Deposits</Link>
       </h1>
