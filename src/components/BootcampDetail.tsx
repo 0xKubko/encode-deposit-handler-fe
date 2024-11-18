@@ -131,7 +131,7 @@ export function BootcampDetail() {
       ) : !bootcamp ? (
         <div>No bootcamp found</div>
       ) : (
-        <div className="flex flex-row min-w-[1000px] w-[80%] justify-between">
+        <div className="flex flex-row min-w-[1000px] w-[80%] mb-8 justify-between">
           <div className="flex flex-col gap-3 w-[50%]">
             <h1 className="text-3xl font-bold">{bootcampName}</h1>
             <div className="flex items-center border-4 border-rose-900 p-5 rounded-md bg-rose-600 text-white my-3 justify-center">
