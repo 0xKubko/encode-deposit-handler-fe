@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import {
   Bootcamp,
   fetchBootcampDetails,
-} from "@/app/queries/fetchBootcampDetails";
+} from "@/app/queries/BootcampFactory/fetchBootcampDetails";
 import { useAccount } from "wagmi";
 
 export const BootcampList = () => {

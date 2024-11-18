@@ -1,6 +1,7 @@
 import { readContract } from "wagmi/actions";
 import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
-import { config } from "@/app/providers";
+import { contractFactoryAddress } from "@/app/const";
+import { config } from "@/configs/wagmi";
 
 export interface Bootcamp {
   id: bigint;
@@ -12,13 +13,11 @@ export interface Bootcamp {
   // deadline: number; // Assuming deadline is a number (seconds since epoch)
 }
 
-export async function fetchBootcampDetails() {
+export async function fetchBootcampDetails() :Promise<Bootcamp[] | Error>  {
   try {
     const length = await readContract(config, {
       abi: BootcampFactoryAbi,
-      address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
-        ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
-        : "0x0000000000000000000000000000000000000000",
+      address: contractFactoryAddress,
       functionName: "totalBootcampAmount",
       args: [],
     });
@@ -27,9 +26,7 @@ export async function fetchBootcampDetails() {
     for (let i = 0; i < length; i++) {
       const result = (await readContract(config, {
         abi: BootcampFactoryAbi,
-        address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
-          ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
-          : "0x0000000000000000000000000000000000000000",
+        address: contractFactoryAddress,
         functionName: "bootcamps",
         args: [BigInt(i + 1)],
       })) as [bigint, bigint, `0x${string}`, `0x${string}`];

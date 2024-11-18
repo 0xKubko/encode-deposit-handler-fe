@@ -1,88 +1,41 @@
 "use client";
 
 import { Button } from "@radix-ui/themes";
-import { useAccount, useWriteContract } from "wagmi";
-import { useEffect, useState } from "react";
-import { readContract } from "wagmi/actions";
-import { config } from "@/app/providers";
-import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
-import { checkIsAdmin } from "@/app/queries/checkIsAdmin";
+import { useState } from "react";
+import { useIsAdmin } from "../hooks/useIsAdmin";
+import { blockExplorer } from "../const";
+import { addManager, removeManager } from "../queries/BootcampFactory/addManager";
 
 export default function Admin() {
-  const { address: walletAddress } = useAccount();
-  const [hydrated, setHydrated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState<boolean | Error>(false);
+  const {isAdmin} = useIsAdmin();
   const [managerAddress, setManagerAddress] = useState("");
-  const { writeContract } = useWriteContract();
-
-  // auxillary functions
-  const fetchAdminStatus = async () => {
-    if (walletAddress) {
-      const adminStatus = await checkIsAdmin(walletAddress);
-      setIsAdmin(adminStatus); // Update admin status
-    } else {
-      setIsAdmin(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAdminStatus();
-
-    setHydrated(true);
-  }, [walletAddress]); // Rerun when the wallet address changes
-
-  if (!hydrated) return null;
+  const [tx, setTx] = useState<`0x${string}` | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // todo: fetch this from backend as there is no list on-chain
   const currentManagers = ["0x1234", "0x5678"];
 
   const handleAddManager = async () => {
-    try {
-      const managerRole = await readContract(config, {
-        abi: BootcampFactoryAbi,
-        address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
-          ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
-          : "0x0000000000000000000000000000000000000000",
-        functionName: "MANAGER",
-        args: [],
-      });
-
-      const txn = writeContract({
-        abi: BootcampFactoryAbi,
-        address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
-          ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
-          : "0x0000000000000000000000000000000000000000",
-        functionName: "grantRole",
-        args: [managerRole, managerAddress as `0x${string}`],
-      });
-      return txn;
-    } catch (error) {
-      return error as Error;
+    setError(null);
+    setTx(null);
+    const result = await addManager(managerAddress as `0x${string}`)
+    if (result instanceof Error) {
+      console.error(result);
+      setError(result.message);
+    } else {
+      setTx(result);
     }
   };
 
   const handleRemoveManager = async () => {
-    try {
-      const managerRole = await readContract(config, {
-        abi: BootcampFactoryAbi,
-        address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
-          ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
-          : "0x0000000000000000000000000000000000000000",
-        functionName: "MANAGER",
-        args: [],
-      });
-
-      const txn = writeContract({
-        abi: BootcampFactoryAbi,
-        address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
-          ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
-          : "0x0000000000000000000000000000000000000000",
-        functionName: "revokeRole",
-        args: [managerRole, managerAddress as `0x${string}`],
-      });
-      return txn;
-    } catch (error) {
-      return error as Error;
+    setError(null);
+    setTx(null);
+    const result = await removeManager(managerAddress as `0x${string}`);
+    if (result instanceof Error) {
+      console.error(result);
+      setError(result.message);
+    } else {
+      setTx(result);
     }
   };
 
@@ -115,6 +68,8 @@ export default function Admin() {
 
             <Button onClick={handleAddManager}>Add Manager</Button>
             <Button onClick={handleRemoveManager}>Remove Manager</Button>
+            {tx !== null && <a href={`${blockExplorer}/tx/${tx}`}>See on the explorer!</a>}
+            {error && <p className="text-red-500">{error}</p>}
           </div>
         </>
       )}

@@ -1,39 +1,20 @@
 "use client";
 
 import { Button } from "@radix-ui/themes";
-import { useAccount, useWriteContract } from "wagmi";
-import { useEffect, useState } from "react";
+import { useWriteContract } from "wagmi";
+import { useState } from "react";
 import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
-import { checkIsManager } from "@/app/queries/checkIsManager";
+import { useIsManager } from "../hooks/useIsManager";
+import { contractFactoryAddress } from "../const";
 
 export default function Manager() {
-  const { address: walletAddress } = useAccount();
-  const [hydrated, setHydrated] = useState(false);
-  const [isManager, setIsManager] = useState<boolean | Error>(false);
+  const isManager = useIsManager();
   const [bootcampName, setBootcampName] = useState("");
   const [bootcampDepositAmount, setBootcampDepositAmount] = useState("");
   const [bootcampDepositToken, setBootcampDepositToken] = useState("");
   const [bootcampDuration, setBootcampDuration] = useState("");
   const [bootcampDeadline, setBootcampDeadline] = useState("");
   const { writeContract } = useWriteContract();
-
-  // auxillary functions
-  const fetchManagerStatus = async () => {
-    if (walletAddress) {
-      const managerStatus = await checkIsManager(walletAddress);
-      setIsManager(managerStatus); // Update manager status
-    } else {
-      setIsManager(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchManagerStatus();
-
-    setHydrated(true);
-  }, [walletAddress]); // Rerun when the wallet address changes
-
-  if (!hydrated) return null;
 
   const handleCreateBootcamp = () => {
     console.log("Creating Bootcamp:", {
@@ -43,9 +24,7 @@ export default function Manager() {
 
     writeContract({
       abi: BootcampFactoryAbi,
-      address: process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS
-        ? (process.env.NEXT_PUBLIC_BOOTCAMP_FACTORY_ADDRESS as `0x${string}`)
-        : "0x0000000000000000000000000000000000000000",
+      address: contractFactoryAddress,
       functionName: "createBootcamp",
       args: [
         BigInt(bootcampDepositAmount),

@@ -7,11 +7,11 @@ import { Button, TextArea, TextField } from "@radix-ui/themes";
 import {
   Bootcamp,
   fetchBootcampDetail,
-} from "@/app/queries/fetchBootcampDetail";
-import { checkIsAdmin } from "@/app/queries/checkIsAdmin";
+} from "@/app/queries/BootcampFactory/fetchBootcampDetail";
 import { useWriteContract } from "wagmi";
-import { checkIsPaused } from "@/app/queries/checkIsPaused";
+import { checkIsPaused } from "@/app/queries/DepositHandler/checkIsPaused";
 import { DepositHandlerAbi } from "@/abi/DepositHandler";
+import { useIsAdmin } from "@/app/hooks/useIsAdmin";
 
 export function BootcampDetail() {
   const { address: walletAddress } = useAccount();
@@ -20,8 +20,8 @@ export function BootcampDetail() {
   const [clearedUsers, setClearedUsers] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState<boolean | Error>(false);
   const [isPaused, setIsPaused] = useState<boolean | Error>(false);
+  const isAdmin = useIsAdmin();
 
   const { writeContract, error: writeError } = useWriteContract();
 
@@ -44,15 +44,6 @@ export function BootcampDetail() {
     setLoading(false);
   };
 
-  const fetchAdminStatus = async () => {
-    if (walletAddress) {
-      const adminStatus = await checkIsAdmin(walletAddress);
-      setIsAdmin(adminStatus); // Update admin status
-    } else {
-      setIsAdmin(false);
-    }
-  };
-
   const fetchPausedStatus = async () => {
     if (bootcamp) {
       const pausedStatus = await checkIsPaused(bootcamp.bootcampAddress);
@@ -65,7 +56,6 @@ export function BootcampDetail() {
 
   useEffect(() => {
     fetchBootcamp();
-    fetchAdminStatus();
     fetchPausedStatus();
   }, [id, walletAddress]);
 

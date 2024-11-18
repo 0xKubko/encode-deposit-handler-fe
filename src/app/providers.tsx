@@ -2,17 +2,10 @@
 
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createConfig, http, WagmiProvider } from "wagmi";
+import { WagmiProvider } from "wagmi";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { polygon } from "wagmi/chains";
 import { Theme } from "@radix-ui/themes";
-
-export const config = createConfig({
-  chains: [polygon],
-  transports: {
-    [polygon.id]: http(process.env.NEXT_PUBLIC_ALCHEMY_API_KEY),
-  },
-});
+import { config } from "@/configs/wagmi";
 
 const queryClient = new QueryClient();
 

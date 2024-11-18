@@ -1,6 +1,7 @@
 import { readContract } from "wagmi/actions";
-import { config } from "@/app/providers";
+import { config } from "@/configs/wagmi";
 import { DepositHandlerAbi } from "@/abi/DepositHandler";
+
 
 export async function checkIsPaused(address: string) {
   try {
