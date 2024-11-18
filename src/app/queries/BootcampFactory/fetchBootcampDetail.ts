@@ -2,7 +2,6 @@ import { readContract } from "wagmi/actions";
 import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
 import { config } from "@/configs/wagmi";
 import { contractFactoryAddress } from "@/app/const";
-import { Result } from "@/app/types";
 
 export interface Bootcamp {
   id: bigint;

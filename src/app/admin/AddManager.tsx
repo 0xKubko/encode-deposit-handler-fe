@@ -32,22 +32,22 @@ export default function AddManager() {
         if (account.address) {
             const isManager = await checkIsManager(managerAddress as `0x${string}`);
             
-            if(isManager.ok && isManager.value){
-                setError("This address is already a manager")
+            if (isManager instanceof Error) {
+                setError(isManager.message)
                 return;
-            } else if (!isManager.ok){
-                setError(isManager.error.message)
+            }else if(isManager){
+                setError("This address is already a manager")
                 return;
             }
 
             setIsLoading(true);
             addManager(managerAddress as `0x${string}`).then(
                 result => {
-                    if (result.ok) {                        
-                        setTx(result.value);
-                        setError(null); // Clear error if submission is successful
+                    if (result instanceof Error) {  
+                        setError(result.message);                      
                     } else {
-                        setError(result.error.message);
+                        setTx(result);
+                        setError(null); // Clear error if submission is successful
                     }
                     setIsLoading(false);
                 }

@@ -1,12 +1,12 @@
 import { writeContract } from '@wagmi/core'
 import { config } from '@/configs/wagmi'
-import { abi as bootcampFactoryAbi } from '@/abi/BootcampFactory.json'
+import {BootcampFactoryAbi} from '@/abi/BootcampFactory'
 import { contractFactoryAddress, managerCode } from '@/app/const'
 
 export async function addManager(newManagerAddress: `0x${string}`): Promise<`0x${string}` | Error> {
     try {
         const result : `0x${string}` = await writeContract(config, {
-            abi: bootcampFactoryAbi,
+            abi: BootcampFactoryAbi,
             address: contractFactoryAddress,
             functionName: 'grantARole',
             args: [
@@ -24,7 +24,7 @@ export async function addManager(newManagerAddress: `0x${string}`): Promise<`0x$
 export async function removeManager(managerAddress: `0x${string}`): Promise<`0x${string}` | Error> {
     try {
         const result : `0x${string}` = await writeContract(config, {
-            abi: bootcampFactoryAbi,
+            abi: BootcampFactoryAbi,
             address: contractFactoryAddress,
             functionName: 'revokeARole',
             args: [
