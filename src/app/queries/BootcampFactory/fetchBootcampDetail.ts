@@ -1,33 +1,73 @@
 import { readContract } from "wagmi/actions";
-import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
 import { config } from "@/configs/wagmi";
-import { contractFactoryAddress } from "@/app/const";
+import { DepositHandlerAbi } from "@/abi/DepositHandler";
 
 export interface Bootcamp {
-  id: bigint;
+  name: string;
   depositAmount: bigint;
   depositToken: `0x${string}`;
   bootcampAddress: `0x${string}`;
-  // todo: add stuff below
-  // start: number; // Assuming start is a number (seconds since epoch)
-  // deadline: number; // Assuming deadline is a number (seconds since epoch)
+  bootcampStartTime: Date;
+  bootcampDeadline: Date;
+  withdrawDuration: number;
 }
 
-export async function fetchBootcampDetail(id: number): Promise<Bootcamp | Error> {
+export async function fetchBootcampDetail(address: `0x${string}`): Promise<Bootcamp | Error> {
   try {
-    const result = await readContract(config, {
-      abi: BootcampFactoryAbi,
-      address: contractFactoryAddress,
-      functionName: "bootcamps",
-      args: [BigInt(id)],
+    const name = await readContract(config, {
+      abi: DepositHandlerAbi,
+      address,
+      functionName: "bootcampName",
+      args: [],
     });
 
+    const depositAmount = await readContract(config, {
+      abi: DepositHandlerAbi,
+      address,
+      functionName: "depositAmount",
+      args: [],
+    });
+
+    const depositToken = await readContract(config, {
+      abi: DepositHandlerAbi,
+      address,
+      functionName: "depositToken",
+      args: [],
+    });
+
+    const bootcampStartTime = await readContract(config, {
+      abi: DepositHandlerAbi,
+      address,
+      functionName: "bootcampStartTime",
+      args: [],
+    });
+
+    const bootcampDeadline = await readContract(config, {
+      abi: DepositHandlerAbi,
+      address,
+      functionName: "bootcampFinishTime",
+      args: [],
+    });
+
+    const withdrawDuration = await readContract(config, {
+      abi: DepositHandlerAbi,
+      address,
+      functionName: "withdrawDuration",
+      args: [],
+    });
+
+
     const bootcamp: Bootcamp = {
-      id: result[0],
-      depositAmount: result[1],
-      depositToken: result[2],
-      bootcampAddress: result[3],
+      name,
+      bootcampAddress: address,
+      depositAmount,
+      depositToken,
+      bootcampStartTime: new Date(Number(bootcampStartTime) * 1000),
+      bootcampDeadline: new Date(Number(bootcampDeadline) * 1000),
+      withdrawDuration: Number(withdrawDuration),
     };
+
+
     return bootcamp;
   } catch (error) {
     return error as Error;

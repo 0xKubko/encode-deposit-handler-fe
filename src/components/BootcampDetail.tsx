@@ -4,62 +4,31 @@ import { useSearchParams } from "next/navigation";
 import { useAccount } from "wagmi";
 import { useState, useEffect } from "react";
 import { Button, TextArea, TextField } from "@radix-ui/themes";
-import {
-  Bootcamp,
-  fetchBootcampDetail,
-} from "@/app/queries/BootcampFactory/fetchBootcampDetail";
 import { useWriteContract } from "wagmi";
 import { checkIsPaused } from "@/app/queries/DepositHandler/checkIsPaused";
 import { DepositHandlerAbi } from "@/abi/DepositHandler";
 import { useIsAdmin } from "@/app/hooks/useIsAdmin";
 import Image from "next/image";
+import { Address } from "viem";
+import { useBootcampDetails } from "@/app/hooks/useBootcampDetails";
 
 export function BootcampDetail() {
   const { address: walletAddress } = useAccount();
-  const [bootcamp, setBootcamp] = useState<Bootcamp | null>(null);
   const [emergencyWithdrawWallet, setEmergencyWithdrawWallet] = useState("");
   const [clearedUsers, setClearedUsers] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState<boolean | Error>(false);
-  const [bootcampName, setBootcampName] = useState<string>("");
-  const [bootcampImgSrc, setBootcampImgSrc] = useState<string>("");
   const { isAdmin } = useIsAdmin();
 
   const { writeContract, error: writeError } = useWriteContract();
-
   const params = useSearchParams();
-  const id = params.get("id");
+  const address = params.get("address");
 
-  // auxillary functions
-  const fetchBootcamp = async () => {
-    setLoading(true);
-    const data = await fetchBootcampDetail(Number(id));
-
-    if (data instanceof Error) {
-      setError(data.message);
-      setBootcamp(null);
-    } else {
-      setBootcamp(data);
-      setError(null);
-      if (data.id == BigInt(1)) {
-        setBootcampName("Advanced Solidity Bootcamp");
-        setBootcampImgSrc("/advancedSol.png");
-      } else if (data.id === BigInt(2)) {
-        setBootcampName("ZK and Scaling Bootcamp");
-        setBootcampImgSrc("/zkScaling.png");
-      } else {
-        setBootcampName("EVM Bootcamp");
-        setBootcampImgSrc("/evm.png");
-      }
-    }
-
-    setLoading(false);
-  };
+  const {bootcamp, isLoading} = useBootcampDetails(address as Address);
 
   const fetchPausedStatus = async () => {
     if (bootcamp) {
-      const pausedStatus = await checkIsPaused(bootcamp.bootcampAddress);
+      const pausedStatus = await checkIsPaused(address as Address);
       console.log("pausedStatus", pausedStatus);
       setIsPaused(pausedStatus); // Update pause status
     } else {
@@ -68,9 +37,38 @@ export function BootcampDetail() {
   };
 
   useEffect(() => {
-    fetchBootcamp();
     fetchPausedStatus();
-  }, [id, walletAddress]);
+  }, [address, walletAddress]);
+
+
+
+
+  if (!address) {
+    setError("No address found");
+  }
+  
+  if (!bootcamp){
+    return <div>Loading...</div>
+  }
+
+  const bootcampName = bootcamp.name;
+  let bootcampImgSrc;
+  switch (bootcampName){
+      case "Advanced Solidity Bootcamp":
+          bootcampImgSrc = "/advancedSol.png";
+          break;
+      case "ZK and Scaling Bootcamp":
+          bootcampImgSrc = "/zkScaling.png";
+          break;
+      case "EVM Bootcamp":
+          bootcampImgSrc = "/evm.png";
+          break;
+      default:
+          bootcampImgSrc = "/advancedSol.png";
+          break;
+  }
+
+
 
   const deposited = false; // Replace with actual logic to check deposit status
 
@@ -116,7 +114,7 @@ export function BootcampDetail() {
   const handleClearUsers = () => {
     writeContract({
       abi: DepositHandlerAbi,
-      address: bootcamp?.bootcampAddress as `0x${string}`,
+      address: address as `0x${string}`,
       functionName: "updateStatusBatch",
       args: [clearedUsers as `0x${string}`[], 2], // 2 is the status for cleared = Status.Passed
     });
@@ -124,7 +122,7 @@ export function BootcampDetail() {
 
   return (
     <div className="flex flex-col items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
-      {loading ? (
+      {isLoading ? (
         <div>Loading...</div>
       ) : error ? (
         <div>Error: {error}</div>
@@ -151,7 +149,7 @@ export function BootcampDetail() {
               </div>
             </div>
             <div className="flex flex-col gap-4">
-              <b>Bootcamp Address:</b> {bootcamp.bootcampAddress}
+              <b>Bootcamp Address:</b> {address}
             </div>
             <div className="flex flex-row items-center justify-between">
               <Button className="w-[49%]" onClick={handleDeposit}>
