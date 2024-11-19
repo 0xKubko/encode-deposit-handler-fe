@@ -12,7 +12,6 @@ export const config = getDefaultConfig({
     polygon,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS ? [polygonAmoy] : []),
   ],
-  ssr: true,
   transports: {
     [polygon.id]: http(process.env.NEXT_PUBLIC_ALCHEMY_API_KEY),
     [polygonAmoy.id]: http(process.env.NEXT_PUBLIC_AMOY_ALCHEMY_API_KEY),
