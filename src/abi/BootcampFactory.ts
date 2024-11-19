@@ -5,45 +5,44 @@ export const BootcampFactoryAbi = [
     name: "ADMIN",
     inputs: [],
     outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
     name: "DEFAULT_ADMIN_ROLE",
     inputs: [],
     outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
     name: "MANAGER",
     inputs: [],
     outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
     name: "bootcamps",
-    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [{ name: "", type: "address", internalType: "address" }],
     outputs: [
-      { name: "id", type: "uint256", internalType: "uint256" },
       {
         name: "depositAmount",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "depositToken",
         type: "address",
-        internalType: "address",
+        internalType: "address"
       },
       {
         name: "bootcampAddress",
         type: "address",
-        internalType: "address",
-      },
+        internalType: "address"
+      }
     ],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -52,63 +51,56 @@ export const BootcampFactoryAbi = [
       {
         name: "_depositAmount",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
       {
         name: "_depositToken",
         type: "address",
-        internalType: "address",
-      },
-      {
-        name: "_bootcampDuration",
-        type: "uint256",
-        internalType: "uint256",
+        internalType: "address"
       },
       {
         name: "_bootcampStartTime",
         type: "uint256",
-        internalType: "uint256",
+        internalType: "uint256"
       },
+      {
+        name: "_withdrawDuration",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      { name: "_bootcampName", type: "string", internalType: "string" }
     ],
-    outputs: [],
-    stateMutability: "nonpayable",
+    outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
     name: "getRoleAdmin",
-    inputs: [{ name: "role", type: "bytes32", internalType: "bytes32" }],
-    outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "grantARole",
     inputs: [
-      { name: "_role", type: "bytes32", internalType: "bytes32" },
-      { name: "_account", type: "address", internalType: "address" },
+      { name: "role", type: "bytes32", internalType: "bytes32" }
     ],
-    outputs: [],
-    stateMutability: "nonpayable",
+    outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
+    stateMutability: "view"
   },
   {
     type: "function",
     name: "grantRole",
     inputs: [
-      { name: "role", type: "bytes32", internalType: "bytes32" },
-      { name: "account", type: "address", internalType: "address" },
+      { name: "_role", type: "bytes32", internalType: "bytes32" },
+      { name: "_account", type: "address", internalType: "address" }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
     name: "hasRole",
     inputs: [
       { name: "role", type: "bytes32", internalType: "bytes32" },
-      { name: "account", type: "address", internalType: "address" },
+      { name: "account", type: "address", internalType: "address" }
     ],
     outputs: [{ name: "", type: "bool", internalType: "bool" }],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -118,64 +110,78 @@ export const BootcampFactoryAbi = [
       {
         name: "callerConfirmation",
         type: "address",
-        internalType: "address",
-      },
+        internalType: "address"
+      }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "revokeARole",
-    inputs: [
-      { name: "_role", type: "bytes32", internalType: "bytes32" },
-      { name: "_account", type: "address", internalType: "address" },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
     name: "revokeRole",
     inputs: [
-      { name: "role", type: "bytes32", internalType: "bytes32" },
-      { name: "account", type: "address", internalType: "address" },
+      { name: "_role", type: "bytes32", internalType: "bytes32" },
+      { name: "_account", type: "address", internalType: "address" }
     ],
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
     name: "supportsInterface",
-    inputs: [{ name: "interfaceId", type: "bytes4", internalType: "bytes4" }],
+    inputs: [
+      { name: "interfaceId", type: "bytes4", internalType: "bytes4" }
+    ],
     outputs: [{ name: "", type: "bool", internalType: "bool" }],
-    stateMutability: "view",
+    stateMutability: "view"
   },
   {
     type: "function",
-    name: "totalBootcampAmount",
-    inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    stateMutability: "view",
+    name: "withdrawProfit",
+    inputs: [
+      { name: "_amount", type: "uint256", internalType: "uint256" },
+      { name: "_bootcamp", type: "address", internalType: "address" }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "event",
+    name: "AdminFundsWithdrawn",
+    inputs: [
+      {
+        name: "admin",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "withdrawnAmount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "remainedBalance",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
   },
   {
     type: "event",
     name: "BootcampCreated",
     inputs: [
       {
-        name: "bootcampId",
-        type: "uint256",
-        indexed: true,
-        internalType: "uint256",
-      },
-      {
         name: "bootcampAddress",
         type: "address",
         indexed: true,
-        internalType: "address",
-      },
+        internalType: "address"
+      }
     ],
-    anonymous: false,
+    anonymous: false
   },
   {
     type: "event",
@@ -185,22 +191,22 @@ export const BootcampFactoryAbi = [
         name: "role",
         type: "bytes32",
         indexed: true,
-        internalType: "bytes32",
+        internalType: "bytes32"
       },
       {
         name: "previousAdminRole",
         type: "bytes32",
         indexed: true,
-        internalType: "bytes32",
+        internalType: "bytes32"
       },
       {
         name: "newAdminRole",
         type: "bytes32",
         indexed: true,
-        internalType: "bytes32",
-      },
+        internalType: "bytes32"
+      }
     ],
-    anonymous: false,
+    anonymous: false
   },
   {
     type: "event",
@@ -210,22 +216,22 @@ export const BootcampFactoryAbi = [
         name: "role",
         type: "bytes32",
         indexed: true,
-        internalType: "bytes32",
+        internalType: "bytes32"
       },
       {
         name: "account",
         type: "address",
         indexed: true,
-        internalType: "address",
+        internalType: "address"
       },
       {
         name: "sender",
         type: "address",
         indexed: true,
-        internalType: "address",
-      },
+        internalType: "address"
+      }
     ],
-    anonymous: false,
+    anonymous: false
   },
   {
     type: "event",
@@ -235,22 +241,22 @@ export const BootcampFactoryAbi = [
         name: "role",
         type: "bytes32",
         indexed: true,
-        internalType: "bytes32",
+        internalType: "bytes32"
       },
       {
         name: "account",
         type: "address",
         indexed: true,
-        internalType: "address",
+        internalType: "address"
       },
       {
         name: "sender",
         type: "address",
         indexed: true,
-        internalType: "address",
-      },
+        internalType: "address"
+      }
     ],
-    anonymous: false,
+    anonymous: false
   },
   { type: "error", name: "AccessControlBadConfirmation", inputs: [] },
   {
@@ -258,32 +264,34 @@ export const BootcampFactoryAbi = [
     name: "AccessControlUnauthorizedAccount",
     inputs: [
       { name: "account", type: "address", internalType: "address" },
-      { name: "neededRole", type: "bytes32", internalType: "bytes32" },
-    ],
+      { name: "neededRole", type: "bytes32", internalType: "bytes32" }
+    ]
   },
   {
     type: "error",
-    name: "BootcampFactory__CanNotGrantRoleToZeroAddress",
-    inputs: [],
-  },
-  {
-    type: "error",
-    name: "BootcampFactory__CanNotRevokeRoleFromZeroAddress",
-    inputs: [],
+    name: "BootcampFactory__CanNotUpdateRoleForZeroAddress",
+    inputs: []
   },
   {
     type: "error",
     name: "BootcampFactory__DepositTokenCanNotBeZeroAddress",
-    inputs: [],
+    inputs: []
   },
   {
     type: "error",
-    name: "BootcampFactory__GrantNonExistentRole",
-    inputs: [],
+    name: "BootcampFactory__InvalidBootcampAddress",
+    inputs: []
   },
   {
     type: "error",
     name: "BootcampFactory__InvalidBootcampStartTime",
-    inputs: [],
+    inputs: []
   },
+  {
+    type: "error",
+    name: "BootcampFactory__UpdateNonExistentRole",
+    inputs: [
+      { name: "role", type: "bytes32", internalType: "bytes32" }
+    ]
+  }
 ] as const;
