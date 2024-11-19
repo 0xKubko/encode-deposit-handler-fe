@@ -1,38 +1,50 @@
 "use client";
 
 import { Button } from "@radix-ui/themes";
-import { useWriteContract } from "wagmi";
 import { useState } from "react";
-import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
 import { useIsManager } from "../hooks/useIsManager";
-import { contractFactoryAddress } from "../const";
+import { createBootcamp } from "../queries/BootcampFactory/createBootcamp";
+import { blockExplorer } from "../const";
 
 export default function Manager() {
   const { isManager } = useIsManager();
   const [bootcampName, setBootcampName] = useState("");
   const [bootcampDepositAmount, setBootcampDepositAmount] = useState("");
   const [bootcampDepositToken, setBootcampDepositToken] = useState("");
-  const [bootcampDuration, setBootcampDuration] = useState("");
-  const [bootcampDeadline, setBootcampDeadline] = useState("");
-  const { writeContract } = useWriteContract();
+  const [bootcampStartTime, setBootcampDuration] = useState("");
+  const [withdrawDuration, setBootcampDeadline] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [tx, setTx] = useState<string | null>(null);
 
   const handleCreateBootcamp = () => {
+
+    if(!bootcampName || !withdrawDuration){
+      setError("Please fill out all fields");
+      return;
+    }
+
     console.log("Creating Bootcamp:", {
       name: bootcampName,
-      deadline: bootcampDeadline,
+      deadline: withdrawDuration,
     });
 
-    writeContract({
-      abi: BootcampFactoryAbi,
-      address: contractFactoryAddress,
-      functionName: "createBootcamp",
-      args: [
-        BigInt(bootcampDepositAmount),
-        bootcampDepositToken as `0x${string}`, // 0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359 for polygon usdc
-        BigInt(bootcampDuration), // 6 weeks is 3628800 seconds
-        BigInt(bootcampDeadline), // todo: add handling to this because contract reverts if deadline is in the past? wagmi gives silent error
-      ],
+    createBootcamp(
+      Number(bootcampDepositAmount),
+      bootcampDepositToken,
+      Number(bootcampStartTime),
+      Number(withdrawDuration),
+      bootcampName
+    ).then((result) => {
+      if (result instanceof Error) {
+        console.error("Error creating bootcamp:", result);
+        setError(result.message);
+        return;
+      } else {
+        console.log("Bootcamp Created:", result);
+        setTx(result);
+      }
     });
+
 
     // todo: add some pending, and success/error handling. maybe some transaction receipt?
 
@@ -87,10 +99,10 @@ export default function Manager() {
             </label>
 
             <label className="flex flex-col">
-              <span>Bootcamp Duration (in seconds):</span>
+              <span>Bootcamp Start Time (as UNIX Timestamps in seconds)</span>
               <input
                 type="number"
-                value={bootcampDuration}
+                value={bootcampStartTime}
                 onChange={(e) => setBootcampDuration(e.target.value)}
                 placeholder="Enter duration in seconds (e.g., 1800000000)"
                 className="border rounded px-3 py-2"
@@ -98,10 +110,10 @@ export default function Manager() {
             </label>
 
             <label className="flex flex-col">
-              <span>Bootcamp Deadline (as a UNIX timestamp):</span>
+              <span>Withdraw Duration(seconds):</span>
               <input
                 type="number"
-                value={bootcampDeadline}
+                value={withdrawDuration}
                 onChange={(e) => setBootcampDeadline(e.target.value)}
                 placeholder="Enter deadline (e.g., 1800000000)"
                 className="border rounded px-3 py-2"
@@ -110,10 +122,14 @@ export default function Manager() {
 
             <Button
               onClick={handleCreateBootcamp}
-              disabled={!bootcampName || !bootcampDeadline}
+              disabled={!bootcampName || !withdrawDuration}
             >
               Create Bootcamp
             </Button>
+            {tx !== null && (
+              <a href={`${blockExplorer}/tx/${tx}`}>See on the explorer!</a>
+            )}
+            {error && <p className="text-red-500">{error}</p>}
           </div>
         </>
       )}

@@ -8,7 +8,7 @@ export async function addAdmin(newAdminAddress: `0x${string}`): Promise<`0x${str
         const result : `0x${string}` = await writeContract(config, {
             abi: BootcampFactoryAbi,
             address: contractFactoryAddress,
-            functionName: 'grantARole',
+            functionName: 'grantRole',
             args: [
                 adminCode,
                 newAdminAddress,
@@ -26,7 +26,7 @@ export async function removeAdmin(adminAddress: `0x${string}`): Promise<`0x${str
         const result : `0x${string}` = await writeContract(config, {
             abi: BootcampFactoryAbi,
             address: contractFactoryAddress,
-            functionName: 'revokeARole',
+            functionName: 'revokeRole',
             args: [
                 adminCode,
                 adminAddress,
