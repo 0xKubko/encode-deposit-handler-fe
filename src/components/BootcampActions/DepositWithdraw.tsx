@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@radix-ui/themes";
 import { Address, formatUnits } from "viem";
 import { ConfirmDeposit } from "./ConfirmDeposit";
-import { useDeposited } from "@/app/hooks/useDeposited";
+import { useDeposit } from "@/app/hooks/useDeposited";
 import { deposit } from "@/app/queries/DepositHandler/deposit";
 import { allowAmount } from "@/app/queries/ERC20/allowAmount";
 import { useAllowance } from "@/app/hooks/useAllowance";
@@ -26,7 +26,7 @@ export function DepositWithdraw({ bootcamp, walletAddress }: DepositProps) {
   const [tx, setTx] = useState<`0x${string}` | null>(null);
 
   const { allowance, refetchAllowance } = useAllowance(bootcamp.bootcampAddress, walletAddress, bootcamp.depositToken);
-  const { isDeposited, deposit: _deposit, refetchDepositing, isDepositedLoading } = useDeposited(walletAddress, bootcamp.bootcampAddress);
+  const { isDeposited, deposit: _deposit, refetchDepositing, isDepositedLoading } = useDeposit(walletAddress, bootcamp.bootcampAddress);
   const decimals = useDecimals(bootcamp.depositToken);
 
   if (decimals instanceof Error) {
@@ -89,14 +89,16 @@ export function DepositWithdraw({ bootcamp, walletAddress }: DepositProps) {
 
   const deposited = isDeposited || isDepositedLoading;
   const depositAmount = decimals ? formatUnits(bootcamp.depositAmount,decimals) : '';
-  const withdrawEnabled = isDeposited && _deposit?.status === Status.Withdraw;
+  const deadlinePassed = (new Date()).getSeconds() > bootcamp.bootcampDeadline.getSeconds() + bootcamp.withdrawDuration;
+  const withdrawEnabled = !deadlinePassed && isDeposited && _deposit?.status === Status.Withdraw && !_deposit?.depositDonation;
+  const passed = _deposit?.status === Status.Passed;
 
   return (
     <>
       <div className="flex flex-row items-center justify-between">
         {!deposited && Number(allowance) < bootcamp.depositAmount ? <Button className="w-[49%]" color="blue" onClick={handleApprove}>Approve {depositAmount}</Button> :
           (<ConfirmDeposit onConfirm={handleDeposit}  >
-            <Button className="w-[49%]" color="blue" disabled={deposited}>Deposit {depositAmount}</Button>
+            <Button className="w-[49%]" color="blue" disabled={deposited}> Deposit {depositAmount}</Button>
           </ConfirmDeposit>)
         }
         <Button className="w-[49%]" disabled={!withdrawEnabled} onClick={handleWithdrawal}>Withdraw</Button>
@@ -104,7 +106,7 @@ export function DepositWithdraw({ bootcamp, walletAddress }: DepositProps) {
       {isDeposited && <div className="flex flex-row items-center justify-between">
         <p>Want to donate your deposit ?</p>
         <ConfirmDonate onConfirm={handleDonate} >
-          <Button className="w-[49%]" color="blue">Donate</Button>
+          <Button className="w-[49%]" color="blue" disabled={passed || _deposit?.depositDonation}>Donate</Button>
         </ConfirmDonate>
       </div>}
 

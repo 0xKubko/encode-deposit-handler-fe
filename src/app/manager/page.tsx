@@ -6,18 +6,20 @@ import { useIsManager } from "../hooks/useIsManager";
 import { createBootcamp } from "../queries/BootcampFactory/createBootcamp";
 import { blockExplorer } from "../const";
 import { useQueryClient } from "@tanstack/react-query";
+import { usePublicClient } from "wagmi";
 
 export default function Manager() {
   const { isManager } = useIsManager();
   const [bootcampName, setBootcampName] = useState("");
   const [bootcampDepositAmount, setBootcampDepositAmount] = useState("");
   const [bootcampDepositToken, setBootcampDepositToken] = useState("");
-  const [bootcampStartTime, setBootcampDuration] = useState("");
+  const [bootcampStartTime, setBootcampStartTime] = useState("");
   const [bootcampDeadline, setBootcampDeadline] = useState("");
   const [withdrawDuration, setWithdrawDuration] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [tx, setTx] = useState<string | null>(null);
   const queryClient = useQueryClient();
+  const publicClient = usePublicClient();
 
   const handleCreateBootcamp = () => {
 
@@ -35,8 +37,8 @@ export default function Manager() {
       Number(bootcampDepositAmount),
       bootcampDepositToken,
       Number(bootcampStartTime),
-      Number(withdrawDuration),
       Number(bootcampDeadline),
+      Number(withdrawDuration),
       bootcampName,
       queryClient
     ).then((result) => {
@@ -104,8 +106,8 @@ export default function Manager() {
               <input
                 type="number"
                 value={bootcampStartTime}
-                onChange={(e) => setBootcampDuration(e.target.value)}
-                placeholder="Enter duration in seconds (e.g., 1800000000)"
+                onChange={(e) => setBootcampStartTime(e.target.value)}
+                placeholder="Enter start date in seconds (e.g., 1800000000)"
                 className="border rounded px-3 py-2"
               />
             </label>
@@ -114,9 +116,9 @@ export default function Manager() {
               <span>Bootcamp Ending Date (as UNIX Timestamps in seconds):</span>
               <input
                 type="number"
-                value={withdrawDuration}
+                value={bootcampDeadline}
                 onChange={(e) => setBootcampDeadline(e.target.value)}
-                placeholder="Enter deadline (e.g., 1800000000)"
+                placeholder="Enter deadline date (e.g., 1800000000)"
                 className="border rounded px-3 py-2"
               />
             </label>

@@ -6,6 +6,7 @@ import { useIsBootcampManager } from "@/app/hooks/useIsBootcampManager";
 import { Bootcamp } from "@/app/queries/BootcampFactory/fetchBootcampDetail";
 import { checkIsPaused } from "@/app/queries/DepositHandler/checkIsPaused";
 import { Status } from "@/app/queries/DepositHandler/DepositTypes";
+import { pause } from "@/app/queries/DepositHandler/pause";
 import { updateStatusBatch } from "@/app/queries/DepositHandler/updateStatusBatch";
 import { Button, TextArea, TextField } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
@@ -44,15 +45,16 @@ export function BootcampManagerActions({ bootcamp, walletAddress }: BootcampMana
     console.log(
       `${functionName === "pause" ? "Pausing" : "Unpausing"} the contract...`
     );
+    const result = await pause(bootcamp.bootcampAddress, functionName);
 
-    // notice: this wont work because the contract has pause/unpause functions private - need to update the contract first
-    // writeContract({
-    //   abi: DepositHandlerAbi,
-    //   address: bootcamp?.bootcampAddress as `0x${string}`,
-    //   functionName: functionName,
-    //   args: [],
-    // });
-    // todo: handle silent ignores when the call reverts
+    if (result instanceof Error) {
+      console.error(result.message);
+      setError(result.message);
+      return;
+    } else {
+      setTx(result);
+      fetchPausedStatus();
+    }
   };
 
   const handleEmergencyWithdraw = () => {

@@ -6,11 +6,15 @@ import { useIsManager } from "./hooks/useIsManager";
 import { BootcampList } from "@/components/BootcampList";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Button } from "@radix-ui/themes";
+import { mint } from "./utils/mint";
 
 export default function Home() {
   const account = useAccount();
   const { isAdmin } = useIsAdmin();
   const { isManager } = useIsManager();
+
+  const testnet = process.env.NEXT_PUBLIC_ENABLE_TESTNETS;
 
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
@@ -38,6 +42,7 @@ export default function Home() {
           </div>
       )}
       <BootcampList />
+      {/* {testnet && account.address && <Button onClick={()=>mint(account.address || '0x', 100000000000000n)}>Faucet</Button>} */}
     </div>
   );
 }
