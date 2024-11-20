@@ -23,29 +23,6 @@ export const BootcampFactoryAbi = [
   },
   {
     type: "function",
-    name: "bootcamps",
-    inputs: [{ name: "", type: "address", internalType: "address" }],
-    outputs: [
-      {
-        name: "depositAmount",
-        type: "uint256",
-        internalType: "uint256"
-      },
-      {
-        name: "depositToken",
-        type: "address",
-        internalType: "address"
-      },
-      {
-        name: "bootcampAddress",
-        type: "address",
-        internalType: "address"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
     name: "createBootcamp",
     inputs: [
       {
@@ -59,7 +36,12 @@ export const BootcampFactoryAbi = [
         internalType: "address"
       },
       {
-        name: "_bootcampStartTime",
+        name: "_bootcampStart",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "_bootcampDeadline",
         type: "uint256",
         internalType: "uint256"
       },
@@ -99,6 +81,13 @@ export const BootcampFactoryAbi = [
       { name: "role", type: "bytes32", internalType: "bytes32" },
       { name: "account", type: "address", internalType: "address" }
     ],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "isBootcamp",
+    inputs: [{ name: "", type: "address", internalType: "address" }],
     outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view"
   },
@@ -284,7 +273,7 @@ export const BootcampFactoryAbi = [
   },
   {
     type: "error",
-    name: "BootcampFactory__InvalidBootcampStartTime",
+    name: "BootcampFactory__InvalidBootcampStartOrDedlineTime",
     inputs: []
   },
   {

@@ -14,7 +14,7 @@ export const DepositHandlerAbi = [
       },
       { name: "_manager", type: "address", internalType: "address" },
       {
-        name: "_bootcampStartTime",
+        name: "_bootcampStart",
         type: "uint256",
         internalType: "uint256"
       },
@@ -56,13 +56,6 @@ export const DepositHandlerAbi = [
   },
   {
     type: "function",
-    name: "bootcampFinishTime",
-    inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
     name: "bootcampName",
     inputs: [],
     outputs: [{ name: "", type: "string", internalType: "string" }],
@@ -70,7 +63,7 @@ export const DepositHandlerAbi = [
   },
   {
     type: "function",
-    name: "bootcampStartTime",
+    name: "bootcampStart",
     inputs: [],
     outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view"
@@ -500,6 +493,11 @@ export const DepositHandlerAbi = [
         name: "_actualAmount",
         type: "uint256",
         internalType: "uint256"
+      },
+      {
+        name: "expectedAmount",
+        type: "uint256",
+        internalType: "uint256"
       }
     ]
   },
@@ -521,6 +519,11 @@ export const DepositHandlerAbi = [
   {
     type: "error",
     name: "DepositHandler__WithdrawStageAlreadyClosed",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "DepositHandler__WithdrawStageNotClosed",
     inputs: []
   },
   { type: "error", name: "EnforcedPause", inputs: [] },
