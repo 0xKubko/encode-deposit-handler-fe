@@ -2,7 +2,6 @@
 
 import { useSearchParams } from "next/navigation";
 import { useAccount } from "wagmi";
-import { useMemo } from "react";
 import Image from "next/image";
 import { Address } from "viem";
 import { useBootcampDetails } from "@/app/hooks/useBootcampDetails";

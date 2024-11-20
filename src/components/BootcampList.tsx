@@ -5,22 +5,15 @@ import { Bootcamp } from "./Bootcamp";
 
 export const BootcampList = () => {
   const {addresses, isLoading} = useBootcampAddresses();
+  const isErrored = addresses instanceof Error;
 
-  if (addresses instanceof Error) {
-    return (
-      <div>
-        <p>Error: {addresses.message}</p>
-      </div>
-    )
-  }
   return (
     <div className="flex flex-col w-[50%]">
       {isLoading ? (
         <div>Loading...</div>
-      ) : !addresses ? (
+      ) : !addresses || isErrored ? (
         <div>No bootcamps found</div>
       ) : (
-        <>
           <div className="flex flex-row gap-2">
             {addresses.map((address, index) => {
               return (
@@ -30,7 +23,6 @@ export const BootcampList = () => {
               );
             })}
           </div>
-        </>
       )}
     </div>
   );
