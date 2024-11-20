@@ -12,9 +12,7 @@ export const BootcampList = () => {
         <p>Error: {addresses.message}</p>
       </div>
     )
-
   }
-
   return (
     <div className="flex flex-col w-[50%]">
       {isLoading ? (

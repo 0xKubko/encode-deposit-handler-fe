@@ -11,12 +11,18 @@ import { useIsAdmin } from "@/app/hooks/useIsAdmin";
 import Image from "next/image";
 import { Address } from "viem";
 import { useBootcampDetails } from "@/app/hooks/useBootcampDetails";
+import { ConfirmDeposit } from "./Confirm";
+import { useDeposited } from "@/app/hooks/useDeposited";
+import { deposit } from "@/app/queries/DepositHandler/deposit";
+import { allowAmount } from "@/app/queries/ERC20/allowAmount";
+import { getAllowance } from "@/app/queries/ERC20/getAllowance";
 
 export function BootcampDetail() {
-  const { address: walletAddress } = useAccount();
+  const { address: walletAddress, isConnected } = useAccount();
   const [emergencyWithdrawWallet, setEmergencyWithdrawWallet] = useState("");
   const [clearedUsers, setClearedUsers] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [tx, setTx] = useState<`0x${string}` | null>(null);
   const [isPaused, setIsPaused] = useState<boolean | Error>(false);
   const { isAdmin } = useIsAdmin();
 
@@ -24,7 +30,11 @@ export function BootcampDetail() {
   const params = useSearchParams();
   const address = params.get("address");
 
-  const {bootcamp, isLoading} = useBootcampDetails(address as Address);
+  const { bootcamp, isLoading } = useBootcampDetails(address as Address);
+  const [allowance, setAllowance] = useState<bigint | null>(null);
+  
+
+  const { isDeposited, refetchDepositing, isDepositedLoading } = useDeposited(walletAddress || '0x', address as Address);
 
   const fetchPausedStatus = async () => {
     if (bootcamp) {
@@ -36,45 +46,86 @@ export function BootcampDetail() {
     }
   };
 
+  const fetchAllowance = async () => {
+    if (address && walletAddress && bootcamp && !(bootcamp instanceof Error)) {
+      const allowance = await getAllowance(address as Address, walletAddress, bootcamp.depositToken);      
+      if (allowance instanceof Error) {
+        setError(allowance.message);
+        return;
+      }
+      setAllowance(allowance);
+    }
+  };
+
   useEffect(() => {
+    fetchAllowance();
     fetchPausedStatus();
   }, [address, walletAddress]);
-
-
-
 
   if (!address) {
     setError("No address found");
   }
-  
-  if (!bootcamp){
+  if (isDeposited instanceof Error) {
+    setError(isDeposited.message);
+  }
+  if (bootcamp instanceof Error) {
+    setError(bootcamp.message);
+    return <div>Error: {error}</div>;
+  }
+
+  if (!bootcamp) {
     return <div>Loading...</div>
   }
 
   const bootcampName = bootcamp.name;
   let bootcampImgSrc;
-  switch (bootcampName){
-      case "Advanced Solidity Bootcamp":
-          bootcampImgSrc = "/advancedSol.png";
-          break;
-      case "ZK and Scaling Bootcamp":
-          bootcampImgSrc = "/zkScaling.png";
-          break;
-      case "EVM Bootcamp":
-          bootcampImgSrc = "/evm.png";
-          break;
-      default:
-          bootcampImgSrc = "/advancedSol.png";
-          break;
+  switch (bootcampName) {
+    case "Advanced Solidity Bootcamp":
+      bootcampImgSrc = "/advancedSol.png";
+      break;
+    case "ZK and Scaling Bootcamp":
+      bootcampImgSrc = "/zkScaling.png";
+      break;
+    case "EVM Bootcamp":
+      bootcampImgSrc = "/evm.png";
+      break;
+    default:
+      bootcampImgSrc = "/advancedSol.png";
+      break;
   }
 
+  const handleApprove = async () => {
+    if (!address) {
+      return;
+    } else if (bootcamp instanceof Error) {
+      setError(bootcamp.message);
+      return;
+    }
+    const result = await allowAmount(address as Address, bootcamp.depositAmount, bootcamp.depositToken);
+    if (result instanceof Error) {
+      setError(result.message);
+      return;
+    }
+    setTx(result);
+    fetchAllowance();
+  }
 
-
-  const deposited = false; // Replace with actual logic to check deposit status
-
-  const handleDeposit = () => {
+  const handleDeposit = async () => {
     console.log("Depositing");
-    // todo: handle deposit logic + approvals first
+    if (!walletAddress) {
+      setError("No account connected");
+      return;
+    } else if (bootcamp instanceof Error) {
+      setError(bootcamp.message);
+      return;
+    }
+    const result = await deposit(address as Address, bootcamp.depositAmount, walletAddress);
+    if (result instanceof Error) {
+      setError(result.message);
+      return;
+    }
+    setTx(result);
+    refetchDepositing();
   };
 
   const handleTogglePause = async () => {
@@ -120,6 +171,8 @@ export function BootcampDetail() {
     });
   };
 
+  const deposited = !!isDeposited || isDepositedLoading;
+
   return (
     <div className="flex flex-col items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
       {isLoading ? (
@@ -152,17 +205,14 @@ export function BootcampDetail() {
               <b>Bootcamp Address:</b> {address}
             </div>
             <div className="flex flex-row items-center justify-between">
-              <Button className="w-[49%]" onClick={handleDeposit}>
-                Deposit
-              </Button>
-              {deposited ? (
-                <Button className="w-[49%]">Withdraw</Button>
-              ) : (
-                <Button className="w-[49%]" disabled>
-                  Withdraw
-                </Button>
-              )}
+              {!deposited && isConnected && Number(allowance) < bootcamp.depositAmount ? <Button  className="w-[49%]" color="blue" onClick={handleApprove}>Approve {bootcamp.depositAmount}</Button> :
+                (<ConfirmDeposit onConfirm={handleDeposit}  >
+                  <Button className="w-[49%]" color="blue" disabled={deposited}>Deposit {bootcamp.depositAmount}</Button>
+                </ConfirmDeposit>)
+              }
+              {isConnected && <Button className="w-[49%]" disabled={!isDeposited}>Withdraw</Button>}
             </div>
+            {tx && <div>Transaction: {tx}</div>}
             {isAdmin && (
               <div className="flex flex-col w-full border-t mt-5 pt-5 gap-3">
                 <b>Admin Actions</b>
