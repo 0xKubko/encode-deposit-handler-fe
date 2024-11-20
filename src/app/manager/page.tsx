@@ -13,8 +13,8 @@ export default function Manager() {
   const [bootcampDepositAmount, setBootcampDepositAmount] = useState("");
   const [bootcampDepositToken, setBootcampDepositToken] = useState("");
   const [bootcampStartTime, setBootcampDuration] = useState("");
-  // const [deadline, setDeadline] = useState("");
-  const [withdrawDuration, setBootcampDeadline] = useState("");
+  const [bootcampDeadline, setBootcampDeadline] = useState("");
+  const [withdrawDuration, setWithdrawDuration] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [tx, setTx] = useState<string | null>(null);
   const queryClient = useQueryClient();
@@ -36,6 +36,7 @@ export default function Manager() {
       bootcampDepositToken,
       Number(bootcampStartTime),
       Number(withdrawDuration),
+      Number(bootcampDeadline),
       bootcampName,
       queryClient
     ).then((result) => {
@@ -49,10 +50,6 @@ export default function Manager() {
       }
     });
 
-
-    // todo: add some pending, and success/error handling. maybe some transaction receipt?
-
-    return true;
   };
 
   return (
@@ -103,7 +100,7 @@ export default function Manager() {
             </label>
 
             <label className="flex flex-col">
-              <span>Bootcamp Start Time (as UNIX Timestamps in seconds)</span>
+              <span>Bootcamp Start Time (as UNIX Timestamps in seconds):</span>
               <input
                 type="number"
                 value={bootcampStartTime}
@@ -114,11 +111,22 @@ export default function Manager() {
             </label>
 
             <label className="flex flex-col">
-              <span>Withdraw Duration(seconds):</span>
+              <span>Bootcamp Ending Date (as UNIX Timestamps in seconds):</span>
               <input
                 type="number"
                 value={withdrawDuration}
                 onChange={(e) => setBootcampDeadline(e.target.value)}
+                placeholder="Enter deadline (e.g., 1800000000)"
+                className="border rounded px-3 py-2"
+              />
+            </label>
+
+            <label className="flex flex-col">
+              <span>Withdraw Duration(seconds):</span>
+              <input
+                type="number"
+                value={withdrawDuration}
+                onChange={(e) => setWithdrawDuration(e.target.value)}
                 placeholder="Enter deadline (e.g., 1800000000)"
                 className="border rounded px-3 py-2"
               />

@@ -38,14 +38,14 @@ export async function fetchBootcampDetail(address: `0x${string}`): Promise<Bootc
     const bootcampStartTime = await readContract(config, {
       abi: DepositHandlerAbi,
       address,
-      functionName: "bootcampStartTime",
+      functionName: "bootcampStart",
       args: [],
     });
 
     const bootcampDeadline = await readContract(config, {
       abi: DepositHandlerAbi,
       address,
-      functionName: "bootcampFinishTime",
+      functionName: "bootcampDeadline",
       args: [],
     });
 

@@ -11,6 +11,7 @@ export async function createBootcamp(
   bootcampDepositToken: string,
   bootcampStartTime: number,
   withdrawDuration: number,
+  bootcampDeadline: number,
   bootcampName: string,
   queryClient?: QueryClient
 ): Promise<`0x${string}` | Error> {
@@ -35,7 +36,7 @@ export async function createBootcamp(
         bootcampDepositToken as `0x${string}`, // 0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359 for polygon usdc
         BigInt(bootcampStartTime), 
         BigInt(withdrawDuration), 
-        // BigInt(bootcampStartTime),
+        BigInt(bootcampDeadline),
         bootcampName,
       ],
     });
