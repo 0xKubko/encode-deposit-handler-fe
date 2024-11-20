@@ -9,11 +9,11 @@ import { checkDeposited } from '../queries/DepositHandler/checkDeposited';
  */
 export function useDeposited(address: Address, bootcampAddress: Address) {
     const account = useAccount();
-    const { data: isDeposited, refetch: refetchDepositing, isLoading: isDepositedLoading } = useQuery({
+    const { data: deposit, refetch: refetchDepositing, isLoading: isDepositedLoading } = useQuery({
         queryKey: ['isDeposited', address],
         queryFn: () => checkDeposited(address,bootcampAddress),
         enabled: !!account.address, // Ensure the query only runs when account.address is available
     });
 
-    return { isDeposited,refetchDepositing, isDepositedLoading };
+    return { isDeposited : deposit !== null, deposit, refetchDepositing, isDepositedLoading };
 }

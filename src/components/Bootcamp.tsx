@@ -1,3 +1,5 @@
+"use client";
+
 import { useBootcampDetails } from "@/app/hooks/useBootcampDetails";
 import Link from "next/link";
 import { Address } from "viem";
@@ -41,7 +43,7 @@ export function Bootcamp({address}: {address: Address}){
           />
           <b>{bootcamp.name}</b>
           <p>
-            Start: {bootcamp.bootcampStartTime.toLocaleDateString("en-US",{} )}
+            Start: {bootcamp.bootcampStartTime.toDateString()}
           </p>
           <div className="flex bg-blue-500 rounded-full p-2 text-white justify-center items-center mt-2">
             View More
