@@ -1,7 +1,8 @@
-import { writeContract } from '@wagmi/core'
+import { writeContract } from 'wagmi/actions';
 import { config } from '@/configs/wagmi'
 import {BootcampFactoryAbi} from '@/abi/BootcampFactory'
 import { contractFactoryAddress, adminCode} from '@/app/const'
+
 
 export async function addAdmin(newAdminAddress: `0x${string}`): Promise<`0x${string}` | Error> {
     try {

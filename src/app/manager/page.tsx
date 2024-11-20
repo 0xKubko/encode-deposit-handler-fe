@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useIsManager } from "../hooks/useIsManager";
 import { createBootcamp } from "../queries/BootcampFactory/createBootcamp";
 import { blockExplorer } from "../const";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Manager() {
   const { isManager } = useIsManager();
@@ -12,9 +13,11 @@ export default function Manager() {
   const [bootcampDepositAmount, setBootcampDepositAmount] = useState("");
   const [bootcampDepositToken, setBootcampDepositToken] = useState("");
   const [bootcampStartTime, setBootcampDuration] = useState("");
+  // const [deadline, setDeadline] = useState("");
   const [withdrawDuration, setBootcampDeadline] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [tx, setTx] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const handleCreateBootcamp = () => {
 
@@ -33,7 +36,8 @@ export default function Manager() {
       bootcampDepositToken,
       Number(bootcampStartTime),
       Number(withdrawDuration),
-      bootcampName
+      bootcampName,
+      queryClient
     ).then((result) => {
       if (result instanceof Error) {
         console.error("Error creating bootcamp:", result);
@@ -119,7 +123,6 @@ export default function Manager() {
                 className="border rounded px-3 py-2"
               />
             </label>
-
             <Button
               onClick={handleCreateBootcamp}
               disabled={!bootcampName || !withdrawDuration}

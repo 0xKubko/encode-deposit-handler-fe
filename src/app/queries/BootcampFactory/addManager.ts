@@ -1,4 +1,4 @@
-import { writeContract } from '@wagmi/core'
+import { writeContract } from 'wagmi/actions';
 import { config } from '@/configs/wagmi'
 import {BootcampFactoryAbi} from '@/abi/BootcampFactory'
 import { contractFactoryAddress, managerCode } from '@/app/const'
