@@ -1,6 +1,6 @@
 import { useAccount } from 'wagmi';
 import { useQuery } from '@tanstack/react-query';
-import { checkIsManager } from '../queries/BootcampFactory/checkRole';
+import { checkIsManager } from '@/app/queries/BootcampFactory/checkRole';
 
 export function useIsManager(){
     const account = useAccount();

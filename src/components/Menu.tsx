@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useIsManager } from "../app/hooks/useIsManager";
-import { useIsAdmin } from "../app/hooks/useIsAdmin";
+import { useIsManager } from "@/app/hooks/useIsManager";
+import { useIsAdmin } from "@/app/hooks/useIsAdmin";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 

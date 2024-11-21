@@ -1,7 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { Address } from 'viem';
-import { getAllowance } from '../queries/ERC20/getAllowance';
+import { getAllowance } from '@/app/queries/ERC20/getAllowance';
 
 
 

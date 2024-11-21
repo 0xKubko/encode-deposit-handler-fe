@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Address } from 'viem';
 import { useAccount } from 'wagmi';
-import { checkDeposited } from '../queries/DepositHandler/checkDeposited';
+import { checkDeposited } from '@/app/queries/DepositHandler/checkDeposited';
 
 
 /** Passing addresss as argument in case we want another user to deposit on the behalf 

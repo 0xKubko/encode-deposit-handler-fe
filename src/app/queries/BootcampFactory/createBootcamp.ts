@@ -2,7 +2,7 @@ import { BootcampFactoryAbi } from "@/abi/BootcampFactory";
 import { contractFactoryAddress } from "@/app/const";
 import { config } from "@/configs/wagmi";
 import { writeContract } from "wagmi/actions";
-import { getDecimals } from "../ERC20/getDecimals";
+import { getDecimals } from "@/app/queries/ERC20/getDecimals";
 import { QueryClient } from "@tanstack/react-query";
 import { parseUnits } from "viem";
 

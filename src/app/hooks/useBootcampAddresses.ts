@@ -1,6 +1,6 @@
 import { usePublicClient } from 'wagmi';
 import { useQuery } from '@tanstack/react-query';
-import { fetchBootcampsAddresses } from '../queries/BootcampFactory/fetchBootcampsAddresses';
+import { fetchBootcampsAddresses } from '@/app/queries/BootcampFactory/fetchBootcampsAddresses';
 
 
 

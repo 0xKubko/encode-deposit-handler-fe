@@ -1,5 +1,5 @@
 import { useAccount } from 'wagmi';
-import { checkIsBootcampManager } from '../queries/BootcampFactory/checkRole';
+import { checkIsBootcampManager } from '@/app/queries/BootcampFactory/checkRole';
 import { useQuery } from '@tanstack/react-query';
 import { Address } from 'viem';
 

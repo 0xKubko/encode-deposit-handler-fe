@@ -2,14 +2,14 @@
 
 import { Button } from "@radix-ui/themes";
 import { useState } from "react";
-import { useIsAdmin } from "../hooks/useIsAdmin";
-import { blockExplorer } from "../const";
+import { useIsAdmin } from "@/app/hooks/useIsAdmin";
+import { blockExplorer } from "@/app/const";
 import {
   addManager,
   removeManager,
-} from "../queries/BootcampFactory/addManager";
-import { addAdmin, removeAdmin } from "../queries/BootcampFactory/addAdmin";
-import { checkIsAdmin, checkIsManager } from "../queries/BootcampFactory/checkRole";
+} from "@/app/queries/BootcampFactory/addManager";
+import { addAdmin, removeAdmin } from "@/app/queries/BootcampFactory/addAdmin";
+import { checkIsAdmin, checkIsManager } from "@/app/queries/BootcampFactory/checkRole";
 
 export default function Admin() {
   const { isAdmin } = useIsAdmin();

@@ -1,7 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { Address } from 'viem';
-import { getDecimals } from '../queries/ERC20/getDecimals';
+import { getDecimals } from '@/app/queries/ERC20/getDecimals';
 
 
 

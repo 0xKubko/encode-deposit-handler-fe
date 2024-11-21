@@ -2,9 +2,9 @@
 
 import { Button } from "@radix-ui/themes";
 import { useState } from "react";
-import { useIsManager } from "../hooks/useIsManager";
-import { createBootcamp } from "../queries/BootcampFactory/createBootcamp";
-import { blockExplorer } from "../const";
+import { useIsManager } from "@/app/hooks/useIsManager";
+import { createBootcamp } from "@/app/queries/BootcampFactory/createBootcamp";
+import { blockExplorer } from "@/app/const";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function Manager() {
