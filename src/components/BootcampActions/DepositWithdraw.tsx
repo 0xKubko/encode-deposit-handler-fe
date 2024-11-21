@@ -91,12 +91,14 @@ export function DepositWithdraw({ bootcamp, walletAddress }: DepositProps) {
   const depositAmount = decimals ? formatUnits(bootcamp.depositAmount,decimals) : '';
   const deadlinePassed = (new Date()).getSeconds() > bootcamp.bootcampDeadline.getSeconds() + bootcamp.withdrawDuration;
   const withdrawEnabled = !deadlinePassed && isDeposited && _deposit?.status === Status.Withdraw && !_deposit?.depositDonation;
+  const allowanceValue = allowance instanceof Error ? undefined : allowance;
+  
   const passed = _deposit?.status === Status.Passed;
 
   return (
     <>
       <div className="flex flex-row items-center justify-between">
-        {!deposited && Number(allowance) < bootcamp.depositAmount ? <Button className="w-[49%]" color="blue" onClick={handleApprove}>Approve {depositAmount}</Button> :
+        {!deposited && allowanceValue != undefined && allowanceValue < bootcamp.depositAmount  ? <Button className="w-[49%]" color="blue" onClick={handleApprove}>Approve {depositAmount}</Button> :
           (<ConfirmDeposit onConfirm={handleDeposit}  >
             <Button className="w-[49%]" color="blue" disabled={deposited}> Deposit {depositAmount}</Button>
           </ConfirmDeposit>)

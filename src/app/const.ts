@@ -16,4 +16,4 @@ if (!checkAddress(_contractFactoryAddress)){
 export const contractFactoryAddress = _contractFactoryAddress as `0x${string}`;
 
 
-export const blockExplorer = process.env.NEXT_PUBLIC_ENABLE_TESTNETS ? 'https://amoy.polygonscan.com/' : 'https://polygonscan.com/'
+export const blockExplorer = process.env.NEXT_PUBLIC_ENABLE_AMOY_TESTNET ? 'https://amoy.polygonscan.com/' : 'https://polygonscan.com/'

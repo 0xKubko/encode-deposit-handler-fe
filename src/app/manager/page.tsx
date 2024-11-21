@@ -6,7 +6,6 @@ import { useIsManager } from "../hooks/useIsManager";
 import { createBootcamp } from "../queries/BootcampFactory/createBootcamp";
 import { blockExplorer } from "../const";
 import { useQueryClient } from "@tanstack/react-query";
-import { usePublicClient } from "wagmi";
 
 export default function Manager() {
   const { isManager } = useIsManager();
@@ -19,7 +18,6 @@ export default function Manager() {
   const [error, setError] = useState<string | null>(null);
   const [tx, setTx] = useState<string | null>(null);
   const queryClient = useQueryClient();
-  const publicClient = usePublicClient();
 
   const handleCreateBootcamp = () => {
 
