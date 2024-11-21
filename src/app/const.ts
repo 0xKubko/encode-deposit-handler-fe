@@ -17,3 +17,5 @@ export const contractFactoryAddress = _contractFactoryAddress as `0x${string}`;
 
 
 export const blockExplorer = process.env.NEXT_PUBLIC_ENABLE_AMOY_TESTNET ? 'https://amoy.polygonscan.com/' : 'https://polygonscan.com/'
+
+export const logsFromBlock = process.env.NEXT_PUBLIC_FROM_BLOCK ? BigInt(process.env.NEXT_PUBLIC_FROM_BLOCK) : BigInt(0);

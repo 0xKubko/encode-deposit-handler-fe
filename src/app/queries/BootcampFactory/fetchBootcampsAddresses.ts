@@ -1,4 +1,4 @@
-import { contractFactoryAddress } from "@/app/const";
+import { contractFactoryAddress, logsFromBlock } from "@/app/const";
 import { Address, parseAbiItem, PublicClient } from "viem";
 
 export async function fetchBootcampsAddresses(publicClient: PublicClient | undefined): Promise<Address[] | Error> {
@@ -9,7 +9,7 @@ export async function fetchBootcampsAddresses(publicClient: PublicClient | undef
         const logs = await publicClient.getLogs({
             address: contractFactoryAddress,
             event: parseAbiItem('event BootcampCreated(address indexed bootcampAddress)'),
-            fromBlock: 14619610n,
+            fromBlock: logsFromBlock,
         })
         const addresses = logs.map(log => log.args.bootcampAddress as Address);
         return addresses;
