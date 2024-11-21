@@ -7,7 +7,7 @@ import { Deposit } from "./DepositTypes";
 
 export async function checkDeposited(address: Address, bootcampAddress:Address) : Promise< Deposit | null | Error> {
   try {
-    const result = await readContract(config, {
+    const [depositedAmount, depositDonation, status] = await readContract(config, {
       abi: DepositHandlerAbi,
       address: bootcampAddress,
       functionName: "deposits",
@@ -16,15 +16,12 @@ export async function checkDeposited(address: Address, bootcampAddress:Address) 
       ],
     });
 
-    if (result[0] !== 0n || result[1] !== false || result[2] !== 0) {
-        return {
-          depositedAmount: result[0],
-          depositDonation: result[1],
-          status: result[2]
-        }
-    }
-
-    return null;
+    return {
+        depositedAmount,
+        depositDonation,
+        status
+      };
+    
   } catch (error) {
     return error as Error;
   }
