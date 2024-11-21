@@ -34,7 +34,7 @@ export async function createBootcamp(
       functionName: "createBootcamp",
       args: [
         parseUnits(bootcampDepositAmount.toString(),decimals),
-        bootcampDepositToken as `0x${string}`, // 0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359 for polygon usdc
+        bootcampDepositToken as `0x${string}`,
         BigInt(bootcampStartTime), 
         BigInt(bootcampDeadline),
         BigInt(withdrawDuration), 

@@ -51,7 +51,6 @@ export function BootcampDetail() {
                 </div>
                 <div className="flex flex-col gap-2">
                   <b>Deadline:</b>
-                  {/* TODO: handle deadline from the contract */}
                   <p>{bootcamp.bootcampDeadline.toDateString()}</p>
 
                 </div>
