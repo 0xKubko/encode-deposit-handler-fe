@@ -1,5 +1,5 @@
 import { useAccount } from 'wagmi';
-import { checkIsAdmin } from '../queries/BootcampFactory/checkRole';
+import { checkIsAdmin } from '@/app/queries/BootcampFactory/checkRole';
 import { useQuery } from '@tanstack/react-query';
 
 
